@@ -8,6 +8,7 @@ const {
     routeDetail,
     getAllCreatedFrom,
     getAllCreatedTo,
+    createBooking,
 
 } = require("../Controller/authFunctions");
 const employeeAuth = require("../middleware/employeeAuth");
@@ -49,5 +50,8 @@ router.get("/find-from-routes", getAllCreatedFrom );
 
 //find all the to routes
 router.get("/find-to-routes", getAllCreatedTo );
+
+//create booking 
+router.post("/create-new-booking", employeeAuth, createBooking);
 
 module.exports = router;
