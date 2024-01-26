@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 require ('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
+const moment = require('moment');
 const registerUser = require("../dataBase/registerUser");
 const customer = require("../dataBase/customer");
 const driver = require("../dataBase/driver");
@@ -352,27 +353,31 @@ const getAllCreatedTo = async (req, res) => {
 };
 
 /* create booking detail */
-// const creatBooking = async(req, res) => {
-//     try{
-//         const bookingId = uuidv4();
-//         const bookingTime = 
-//         const bookingDate = 
-//         const {driverId} = req.body;
-//         const newBookingDetail = new bookingDetail({ 
-//             id: bookingId,
-//             driverId,
-//             time:bookingTime,
-//             date:bookingDate,
-//             phoneNum,
-//             role,
-//          });
-    
-//         await newCustomer.save(); 
-//     }catch (err) {
-//         // Handle any errors that occur during the process
-//         return res.status(500).json({ error: err.message });
-//     }
-// }
+const createBooking = async (req, res) => {
+    try {
+        const bookingId = uuidv4();
+        const bookingTime = moment().format('hh:mmA'); // Format time as "10:15PM"
+        const bookingDate = moment().format('DD/MM/YYYY'); // Format date as "dd/mm/yyyy"
+        const { driverId, customerId, from, to, money } = req.body;
+        const newBookingDetail = new bookingDetail({
+            id: bookingId,
+            driverId,
+            time: bookingTime,
+            date: bookingDate,
+            customerId,
+            from,
+            to,
+            money,
+        });
+
+        await newBookingDetail.save();
+        return res.status(201).json(newBookingDetail);
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return res.status(500).json({ error: err.message });
+    }
+}
+
 
 module.exports = {
     createCustomer,
@@ -383,4 +388,5 @@ module.exports = {
     routeDetail,
     getAllCreatedFrom,
     getAllCreatedTo,
+    createBooking,
 }
