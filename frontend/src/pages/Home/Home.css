@@ -1,0 +1,14 @@
+.make-reserve-btn {
+    background: linear-gradient(#ffd066, #fc973e) !important;
+    color: #000 !important;
+    font-weight: 600 !important;
+}
+
+.home-text-title {
+    color: #fff !important;
+}
+
+.contact-map {
+    width: 100%;
+    height: 445px;
+}
