@@ -288,33 +288,41 @@ const findAllDrivers= async (req, res) => {
 const routeDetail = async (req, res) => {
     try {
         const { from, to } = req.params;
-        const correspondingFromToDetail = await fromToMoney.find({ from, to }); // Assuming 'from' and 'to' are fields in your documents
+        const correspondingFromToDetail = await fromToMoney.find({ from, to });
+
         if (correspondingFromToDetail.length === 0) {
             return res.status(404).json("No data found for the route!");
         }
-        const updatedRouteDetail = await Promise.all(
-            correspondingFromToDetail.map(async (routeDetails) => {
-                try {
-                    const correspondingDriverDetail = await driver.findOne({ id: routeDetails.driverId });
-                    return {
-                        from: routeDetails.from,
-                        to: routeDetails.to,
-                        money:routeDetails.money,
-                        ...correspondingDriverDetail.toObject()
-                    };
-                } catch (error) {
-                    // Handle any errors that occur during driver lookup
-                    throw new Error(`Error fetching driver details: ${error.message}`);
+
+        const updatedRouteDetail = await Promise.all(correspondingFromToDetail.map(async (routeDetails) => {
+            try {
+                const correspondingDriverDetail = await driver.findOne({ id: routeDetails.driverId, availability: true });
+
+                if (!correspondingDriverDetail) {
+                    return null; // Return null if no driver found for the route
                 }
-            })
-        );
-        res.status(200).json(updatedRouteDetail);
+
+                return {
+                    from: routeDetails.from,
+                    to: routeDetails.to,
+                    money: routeDetails.money,
+                    driver: correspondingDriverDetail.toObject() // Convert to plain JavaScript object
+                };
+            } catch (error) {
+                throw new Error(`Error fetching driver details: ${error.message}`);
+            }
+        }));
+
+        // Filter out null values before sending response
+        const filteredRouteDetail = updatedRouteDetail.filter(detail => detail !== null);
+        
+        res.status(200).json(filteredRouteDetail); // Send response once
     } catch (err) {
-        // Handle any other unexpected errors
         console.error("Error in routeDetail:", err);
-        return res.status(500).json({ error: "An unexpected error occurred." });
+        res.status(500).json({ error: "An unexpected error occurred." });
     }
 };
+
 
 /* get all from route */
 const getAllCreatedFrom = async (req, res) => {
@@ -358,9 +366,9 @@ const createBooking = async (req, res) => {
         const bookingId = uuidv4();
         const bookingTime = moment().format('hh:mmA'); // Format time as "10:15PM"
         const bookingDate = moment().format('DD/MM/YYYY'); // Format date as "dd/mm/yyyy"
-        const { driverId, customerId, from, to, money } = req.body;
+        const { driverId, customerId, from, to, money, pickUpLocation } = req.body;
         const newBookingDetail = new bookingDetail({
-            id: bookingId,
+            id:bookingId,
             driverId,
             time: bookingTime,
             date: bookingDate,
@@ -368,6 +376,8 @@ const createBooking = async (req, res) => {
             from,
             to,
             money,
+            status:"Pending",
+            pickUpLocation
         });
 
         await newBookingDetail.save();
@@ -377,6 +387,171 @@ const createBooking = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 }
+
+/* get all bookings for driver */
+const getAllBookings = async (req, res) => {
+    try {
+        const { driverId } = req.params;
+        const allBookingsForYou = await bookingDetail.find({ driverId });
+        
+        if (allBookingsForYou.length === 0) {
+            return res.status(404).json({ error: "No booking for you!" });
+        }
+        
+        const updatedBookingDetail = await Promise.all(
+            allBookingsForYou.map(async booking => {
+                const correspondingCustomer = await customer.findOne({ id: booking.customerId });
+                return {
+                    bookingDetails:booking.toObject(),
+                    customerDetatls:correspondingCustomer.toObject()
+                };
+            })
+        );
+        
+        res.status(200).json(updatedBookingDetail);
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+
+/* confirm the booking */
+const confirmBooking = async (req, res) => {
+    try {
+        const { bookingId } = req.params;
+        const findTheBooking = await bookingDetail.findOne({ id: bookingId });
+        
+        if (!findTheBooking) {
+            return res.status(404).json({ error: "Booking not found!" });
+        }
+        
+        if (findTheBooking.status === "Completed") {
+            return res.status(400).json({ error: "This Booking is already completed!" });
+        }
+        
+        // Update booking status to Completed
+        const updatedBooking = await bookingDetail.findOneAndUpdate(
+            { id: bookingId },
+            { $set: { status: "Completed" } },
+            { new: true }
+        );
+
+        const bookingCustomerDetail = await customer.findOne({ id: findTheBooking.customerId });
+        
+        // Send email to the customer with confirmation
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'demoemail1322@gmail.com',
+                pass: 'znsdgrmwzskpatwz'
+            }
+        });
+
+        const mailOptions = {
+            from: 'demoemail1322@gmail.com',
+            to: bookingCustomerDetail.email,
+            subject: 'Your Booking Confirmed!',
+            html: `
+            <p>Your Booking has been confirmed!</p>
+            <p>Booking ID: ${updatedBooking.id}</p>
+            <p>Status: ${updatedBooking.status}</p>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+        
+        // Respond with updated document
+        return res.status(200).json({ message: "Booking confirmed successfully!", updatedBooking });
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+/* get al booking of customers */
+const getAllBookingsCustomer = async (req, res) => {
+    try{
+        const {customerId} = req.params;
+        const allBookingsForYou = await bookingDetail.find({customerId});
+        if(allBookingsForYou.length===0){
+            return res.status(404).json({error:"No booking for you!"})
+        }
+
+        const updatedBookingDetail = await Promise.all(
+            allBookingsForYou.map(async booking => {
+                const correspondingDriver = await driver.findOne({ id: booking.driverId });
+                return {
+                    bookingDetails:booking.toObject(),
+                    driverDetails:correspondingDriver.toObject()
+                };
+            })
+        );
+
+        res.status(200).json(updatedBookingDetail)
+    }catch (err) {
+        // Handle any errors that occur during the process
+        return res.status(500).json({ error: err.message });
+    }
+}
+
+/* rate the driver */
+const giveRating = async (req, res) => {
+    try {
+        const { bookingId, ratingNum } = req.body;
+        const correspondingBooking = await bookingDetail.findOne({ id: bookingId });
+
+        if (!correspondingBooking) {
+            return res.status(404).json({ error: "Booking not found!" });
+        }
+
+        // Assuming you've properly imported the `driver` model
+
+        const ratingTheDriver = await driver.findOneAndUpdate(
+            { id: correspondingBooking.driverId },
+            { $set: { rating: ratingNum } },
+            { new: true } // This ensures the updated document is returned
+        );
+
+        if (!ratingTheDriver) {
+            return res.status(404).json({ error: "Driver not found!" });
+        }
+
+        return res.status(201).json({ message: "Rating Updated", ratingTheDriver });
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+/* change the availability of driver */
+const changingAvailability = async (req, res) => {
+    try {
+        const { driverId } = req.body;
+        const correspondingDriver = await driver.findOne({ id: driverId });
+
+        if (!correspondingDriver) {
+            return res.status(404).json({ error: "Driver detail not found!" });
+        }
+
+        // Assuming you've properly imported the `driver` model
+
+        // Toggle the availability boolean value
+        const updatedAvailability = !correspondingDriver.availability;
+
+        const changedAvailability = await driver.findOneAndUpdate(
+            { id: driverId },
+            { $set: { availability: updatedAvailability } },
+            { new: true } // This ensures the updated document is returned
+        );
+
+        return res.status(201).json({ message: "Availability Updated", changedAvailability });
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return res.status(500).json({ error: err.message });
+    }
+};
+
 
 
 module.exports = {
@@ -389,4 +564,9 @@ module.exports = {
     getAllCreatedFrom,
     getAllCreatedTo,
     createBooking,
+    getAllBookings,
+    confirmBooking,
+    getAllBookingsCustomer,
+    giveRating,
+    changingAvailability,
 }

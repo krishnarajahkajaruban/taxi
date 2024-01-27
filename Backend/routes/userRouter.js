@@ -9,6 +9,11 @@ const {
     getAllCreatedFrom,
     getAllCreatedTo,
     createBooking,
+    getAllBookings,
+    confirmBooking,
+    getAllBookingsCustomer,
+    giveRating,
+    changingAvailability,
 
 } = require("../Controller/authFunctions");
 const employeeAuth = require("../middleware/employeeAuth");
@@ -53,5 +58,20 @@ router.get("/find-to-routes", getAllCreatedTo );
 
 //create booking 
 router.post("/create-new-booking", employeeAuth, createBooking);
+
+//find all booking for driverId
+router.get("/booking/:driverId", employeeAuth, getAllBookings);
+
+//confirm the booking
+router.patch("/confirm-booking/:bookingId", employeeAuth, confirmBooking);
+
+//find all booking of customerId
+router.get("/bookings-customer/:customerId", employeeAuth, getAllBookingsCustomer);
+
+//update the rating number
+router.patch("/update-driver-rating", employeeAuth, giveRating);
+
+//change the availability of driver
+router.patch("/changing-availability-driver", employeeAuth, changingAvailability);
 
 module.exports = router;
