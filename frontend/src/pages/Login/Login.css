@@ -1,12 +1,13 @@
-.login-form-section{
+.login-form-section {
     border: #fc973e 1px solid;
     padding: 50px;
 }
 
-.login-form-area{
+.login-form-area {
     background-color: #f1f1f1;
     padding: 50px;
 }
+
 .login-input {
     border: 1px solid #fc973e !important;
     border-radius: 0px !important;
@@ -84,18 +85,26 @@
 
 
 /* ///// */
-.dont-acc-text{
+.dont-acc-text {
     font-size: 13px;
     font-weight: 400;
     margin-top: 10px;
     text-align: center;
 }
 
-.dont-acc-text a{
+.dont-acc-text a {
     font-weight: 600;
     color: #fc973e !important;
 }
 
-.dont-acc-text a:hover{
+.dont-acc-text a:hover {
     text-decoration: underline !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }

@@ -90,7 +90,7 @@ const Register = () => {
 
                                     <div className="form-group">
                                         <label htmlFor="mobile" className='form-label'>Mobile Number</label>
-                                        <input name="phoneNum" placeholder="Enter your mobile number" className="common-input mb-20 form-control login-input" required="" type="number" 
+                                        <input name="phoneNum" placeholder="Enter your mobile number" className="common-input mb-20 form-control login-input number" required="" type="number" 
                                         value={credentials.phoneNum}
                                         onChange={handleInputChange}/>
                                     </div>

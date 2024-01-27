@@ -2540,7 +2540,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .banner-content h1 {
-  font-size: 60px;
+  font-size: 50px;
   font-weight: 600;
   line-height: 1em;
   margin-top: 10px;
@@ -2800,12 +2800,20 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .services-area .single-service:hover {
   background-color: #000000;
-  pointer: cursor;
+  cursor: pointer;
 }
 
 .services-area .single-service:hover h4,
 .services-area .single-service:hover .lnr {
   color: #fc973e;
+}
+
+.services-area .single-service p {
+  transition: all 0.3s ease 0s;
+}
+
+.services-area .single-service:hover p {
+  color: #acacac !important;
 }
 
 @media (max-width: 991px) {
@@ -4159,4 +4167,12 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .header-logo {
   height: 40px;
+}
+
+.footer-section-gap {
+  padding: 80px 0;
+}
+
+.footer-links {
+  font-weight: 500 !important;
 }
