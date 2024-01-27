@@ -83,6 +83,16 @@
     font-weight: 600;
 }
 
+.radio-inputs .radio input:checked+.name.success {
+    background-color: #00bf4c !important;
+    color: #FFF;
+}
+
+.radio-inputs .radio input:checked+.name.danger {
+    background-color: #ca0000 !important;
+    color: #FFF;
+}
+
 
 /* ///// */
 .dont-acc-text {

@@ -23,7 +23,6 @@ const driverSchema = new Schema(
     },
     availability: {
         type: Boolean,
-        unique: true,
         required: true
       },
     rating: {

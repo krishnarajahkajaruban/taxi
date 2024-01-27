@@ -460,37 +460,40 @@ const Home = () => {
                                                     {user?.role === "Customer" &&<th className='text-center'>Select</th>}
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                            {routeDetail.map((rout, index) => (
-                                                <tr key={index}>
-                                                    <td>{index + 1}.</td>
-                                                    <td>{rout?.driver?.userName}</td>
-                                                    <td>{rout?.driver?.phoneNum}</td>
-                                                    <td>{rout?.money}</td>
-                                                    <td className='verical-align-middle'>
-                                                        <div className="current-rating">
-                                                            {renderStars(rout?.driver?.rating)}
-                                                        </div>
-                                                    </td>
-                                                    {user?.role === "Customer" &&<td className='text-center'>
-                                                         <button
-                                                            className='btn no-radius view-btn btn-success'
-                                                            onClick={() => {
-                                                                setSelectedRowIndex(index);
-                                                                setShowDateAndTime(true);
-                                                                setDriverId(rout?.driver?.id);
-                                                                setTo(rout?.to);
-                                                                setFrom(rout?.from);
-                                                                setMoney(rout?.money);
-                                                            }}
-                                                            disabled={selectedRowIndex === index} // Disable if this row is selected
-                                                        >
-                                                            <i className='fa fa-check mr-2'>Select</i>
-                                                        </button>
-                                                    </td>}
-                                                </tr>
-                                            ))}
-                                            </tbody>
+                                            {routeDetail.length>0 ?
+                                                <tbody>
+                                                {routeDetail.map((rout, index) => (
+                                                    <tr key={index}>
+                                                        <td>{index + 1}.</td>
+                                                        <td>{rout?.driver?.userName}</td>
+                                                        <td>{rout?.driver?.phoneNum}</td>
+                                                        <td>{rout?.money}</td>
+                                                        <td className='verical-align-middle'>
+                                                            <div className="current-rating">
+                                                                {renderStars(rout?.driver?.rating)}
+                                                            </div>
+                                                        </td>
+                                                        {user?.role === "Customer" &&<td className='text-center'>
+                                                            <button
+                                                                className='btn no-radius view-btn btn-success'
+                                                                onClick={() => {
+                                                                    setSelectedRowIndex(index);
+                                                                    setShowDateAndTime(true);
+                                                                    setDriverId(rout?.driver?.id);
+                                                                    setTo(rout?.to);
+                                                                    setFrom(rout?.from);
+                                                                    setMoney(rout?.money);
+                                                                }}
+                                                                disabled={selectedRowIndex === index} // Disable if this row is selected
+                                                            >
+                                                                <i className='fa fa-check mr-2'>Select</i>
+                                                            </button>
+                                                        </td>}
+                                                    </tr>
+                                                ))}
+                                                </tbody> : <p>No Driver Details!</p>
+                                            }
+                                            
                                         </table>
                                     </div>
                                 </div>
@@ -541,7 +544,8 @@ const Home = () => {
                         onClick={()=>navigate("/log-in")}>Please login as Customer to Book....</button>}
                             <button type="button" class="btn no-radius btn-secondary" data-dismiss="modal">Close</button>
                             {user?.role === "Customer" &&<button type="button" class="btn no-radius btn-orange"
-                            onClick={()=>handleBooking()}>Book</button>}
+                            onClick={()=>handleBooking()}
+                            disabled={routeDetail.length===0}>Book</button>}
                             
                         </div>
                     </div>

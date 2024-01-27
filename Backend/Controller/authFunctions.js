@@ -563,8 +563,8 @@ const getAllBookingsForAdmin = async (req, res) => {
                 const correspondingDriver = await driver.findOne({ id: booking.driverId });
                 return {
                     bookingDetails:booking.toObject(),
-                    customerDetatls:correspondingCustomer.toObject(),
-                    driverDetails:correspondingDriver.toObject()
+                    customerDetatls:(correspondingCustomer && correspondingCustomer.toObject()),
+                    driverDetails:(correspondingDriver && correspondingDriver.toObject())
                 };
             })
         );
@@ -576,7 +576,21 @@ const getAllBookingsForAdmin = async (req, res) => {
     }
 };
 
-
+/* get all from route */
+const getAllRoutesForDriver = async (req, res) => {
+    try {
+        const {driverId} = req.params;
+        const allRoutesForDriver = await fromToMoney.find({driverId});
+        if (allRoutesForDriver.length === 0) {
+            return res.status(404).json({ error: "No data" });
+        }
+        
+        res.status(200).json(allRoutesForDriver);
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return res.status(500).json({ error: err.message });
+    }
+};
 
 module.exports = {
     createCustomer,
@@ -594,4 +608,5 @@ module.exports = {
     giveRating,
     changingAvailability,
     getAllBookingsForAdmin,
+    getAllRoutesForDriver,
 }

@@ -15,6 +15,7 @@ const {
     giveRating,
     changingAvailability,
     getAllBookingsForAdmin,
+    getAllRoutesForDriver,
 
 } = require("../Controller/authFunctions");
 const driver = require("../dataBase/driver");
@@ -89,5 +90,8 @@ router.patch("/changing-availability-driver", employeeAuth, changingAvailability
 
 //find all bookings for admin
 router.get("/all-bookings-with-customer-driver-details", employeeAuth, getAllBookingsForAdmin);
+
+//get all routes for driver
+router.get("/all-routes-driver/:driverId", employeeAuth, getAllRoutesForDriver);
 
 module.exports = router;
