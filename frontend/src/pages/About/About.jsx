@@ -25,7 +25,7 @@ const Home = () => {
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-6 about-left">
-                            <img className="img-fluid" src="img/about-img.jpg" alt="" />
+                            <img className="img-fluid" src="../img/about-img.jpg" alt="" />
                         </div>
                         <div className="col-lg-6 about-right">
                             <h1>Globally Connected
