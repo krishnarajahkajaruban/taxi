@@ -279,7 +279,7 @@ const Dashboard = () => {
                 <Footer />
 
                 <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-dialog modal-dialog-centered modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title text-orange" id="exampleModalLabel">{bookingUserDetail?.type} Information</h5>

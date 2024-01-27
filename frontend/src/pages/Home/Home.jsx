@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Home.css';
 import Layout from '../../components/Layout';
 import { Footer } from '../../components/Footer';
 
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 const Home = () => {
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    const handleChange = date => {
+        setSelectedDate(date);
+    };
 
     return (
         <>
@@ -25,42 +33,40 @@ const Home = () => {
                         <div className="col-lg-4  col-md-6 header-right">
                             <h4 className="pb-30 home-text-title">Book Your Texi Online!</h4>
                             <form className="form">
-                                <div className="from-group">
-                                    <input className="form-control txt-field" type="text" name="name" placeholder="Your name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your name'" />
-                                    <input className="form-control txt-field" type="email" name="email" placeholder="Email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email address'" />
-                                    <input className="form-control txt-field" type="tel" name="phone" placeholder="Phone number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Phone number'" />
-                                </div>
-                                <div className="form-group">
-                                    <div className="default-select" id="default-select">
-                                        <select className='form-control'>
-                                            <option value="" disabled selected hidden>From Destination</option>
-                                            <option value="1">Destination One</option>
-                                            <option value="2">Destination Two</option>
-                                            <option value="3">Destination Three</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <div className="default-select" id="default-select2">
-                                        <select className='form-control'>
-                                            <option value="" disabled selected hidden>To Destination</option>
-                                            <option value="1">Destination One</option>
-                                            <option value="2">Destination Two</option>
-                                            <option value="3">Destination Three</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <div className="input-group dates-wrap">
-                                        {/* <input type="date" className="dates form-control" placeholder="Date & time" type="text" />
-                                        <div className="input-group-prepend">
-                                            <span className="input-group-text"><span className="lnr lnr-calendar-full"></span></span>
+                                <div className="from-group mb-4">
+                                    <div className='relative'>
+                                        <label htmlFor="from" className='home-book-input-label'>From</label>
+                                        <input className="form-control txt-field home-book-input mb-0" type="text" name="from" placeholder="Search Location" />
+
+                                        {/* <div className='search-result-data-area custom'>
+                                            <div className='search-result-data'>Location 1</div>
+                                            <div className='search-result-data'>Location 1</div>
+                                            <div className='search-result-data'>Location 1</div>
+                                            <div className='search-result-data'>Location 1</div>
+                                            <div className='search-result-data'>Location 1</div>
+                                            <div className='search-result-data'>Location 1</div>
+                                            <div className='search-result-data'>Location 1</div>
                                         </div> */}
-                                        <input type="date" className='form-control' />
+
+                                    </div>
+                                </div>
+                                <div className="from-group mb-4">
+                                    <div className='relative'>
+                                        <label htmlFor="from" className='home-book-input-label'>To</label>
+                                        <input className="form-control txt-field home-book-input mb-0" type="text" name="to" placeholder="Search Location" />
+                                        {/* <div className='search-result-data-area custom'>
+                                        <div className='search-result-data'>Location 1</div>
+                                        <div className='search-result-data'>Location 1</div>
+                                        <div className='search-result-data'>Location 1</div>
+                                        <div className='search-result-data'>Location 1</div>
+                                        <div className='search-result-data'>Location 1</div>
+                                        <div className='search-result-data'>Location 1</div>
+                                        <div className='search-result-data'>Location 1</div>
+                                    </div> */}
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <button className="btn btn-default btn-lg btn-block text-center text-uppercase make-reserve-btn">Make reservation</button>
+                                    <button type='button' className="btn btn-default btn-lg btn-block text-center text-uppercase make-reserve-btn" data-toggle="modal" data-target="#exampleModal">SUBMIT</button>
                                 </div>
                             </form>
                         </div>
@@ -269,7 +275,7 @@ const Home = () => {
                         <div className="col-lg-6">
                             <div className="single-latest-blog">
                                 <div className="thumb">
-                                    <img className="img-fluid" src="img/b1.jpg" alt=""/>
+                                    <img className="img-fluid" src="img/b1.jpg" alt="" />
                                 </div>
                                 <ul className="tags">
                                     <li><a href="#">Travel</a></li>
@@ -287,7 +293,7 @@ const Home = () => {
                         <div className="col-lg-6">
                             <div className="single-latest-blog">
                                 <div className="thumb">
-                                    <img className="img-fluid" src="img/b2.jpg" alt=""/>
+                                    <img className="img-fluid" src="img/b2.jpg" alt="" />
                                 </div>
                                 <ul className="tags">
                                     <li><a href="#">Travel</a></li>
@@ -306,6 +312,125 @@ const Home = () => {
                 </div>
             </section>
             <Footer />
+
+            {/* booking modal here */}
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content dark-theme">
+                        <div class="modal-header dark-theme">
+                            <h5 class="modal-title text-orange" id="exampleModalLabel">Booking</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" className='text-danger'>&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body dark-theme">
+                            {/* selected locations here */}
+                            <div className="selected-location-area">
+                                <div className="row">
+                                    <div className="col-6">
+                                        <div className='selected-location'>
+                                            <h6 className='text-orange'>From : </h6>
+                                            <h6 className='text-white sub-text'>Jaffna</h6>
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className='selected-location'>
+                                            <h6 className='text-orange'>To : </h6>
+                                            <h6 className='text-white sub-text'>India</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/*  */}
+
+                            {/* driver details here */}
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="">
+                                        <table className="table table-borderd bg-white modal-table dark-theme">
+                                            <thead>
+                                                <tr className='bg-black'>
+                                                    <th>No.</th>
+                                                    <th>Driver Name</th>
+                                                    <th>Mobile Number</th>
+                                                    <th>Amount</th>
+                                                    <th>Rating</th>
+                                                    <th className='text-center'>Select</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>01.</td>
+                                                    <td>P.Vincent</td>
+                                                    <td>0770550456</td>
+                                                    <td>100 LKR</td>
+                                                    <td className='verical-align-middle'>
+                                                        <div className="current-rating">
+                                                            <i className='fa fa-star rate'></i>
+                                                            <i className='fa fa-star rate'></i>
+                                                            <i className='fa fa-star rate'></i>
+                                                            <i className='fa fa-star'></i>
+                                                            <i className='fa fa-star'></i>
+                                                        </div>
+                                                    </td>
+                                                    <td className='text-center'>
+                                                        <button className='btn no-radius view-btn btn-success'>
+                                                            <i className='fa fa-check mr-2'> Select</i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {/*  */}
+
+                            {/* booking form here */}
+                            <div className="row">
+                                <div className="col-12">
+                                    <form action="">
+                                        <div className='book-form-area'>
+                                            <div className="row">
+                                                <div className="col-12 col-lg-6">
+                                                    <div className="form-group">
+                                                        <label htmlFor="" className='form-label absolute text-orange'>Pickup Location</label>
+                                                        <input type="text" className='form-control dark-theme' placeholder='Enter your pickup location' />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-lg-6">
+                                                    <div className="form-group">
+                                                        <label htmlFor="" className='form-label absolute text-orange'>Date & Time</label>
+                                                        <div className='w-100 date-picker-custom'>
+                                                            <DatePicker
+                                                                className='form-control dark-theme'
+                                                                placeholderText='Select Date and Time'
+                                                                selected={selectedDate}
+                                                                onChange={handleChange}
+                                                                showTimeSelect
+                                                                dateFormat="MMMM d, yyyy h:mm aa"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            {/*  */}
+
+                        </div>
+                        <div class="modal-footer dark-theme">
+                            <button type="button" class="btn no-radius btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn no-radius btn-orange">Book</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/*  */}
         </>
     )
 }
