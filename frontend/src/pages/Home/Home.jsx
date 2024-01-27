@@ -1,18 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Home.css';
 import Layout from '../../components/Layout';
 import { Footer } from '../../components/Footer';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+    const navigate = useNavigate();
+    const [token, setToken] = useState("");
+    const [user, setUser] = useState();
     const [selectedDate, setSelectedDate] = useState(null);
+    const [toLocations, setToLocations] = useState([]);
+    const [fromLocations, setFromLocations] = useState([]);
 
+    const [filteredLocations, setFilteredLocations] = useState([]);
+    const [selectedLocation, setSelectedLocation] = useState('');
+
+    const [filteredToLocations, setFilteredToLocations] = useState([]);
+    const [selectedToLocation, setSelectedToLocation] = useState('');
+
+    const [routeDetail, setRouteDetail] = useState([]); 
+    const [showDateAndTime, setShowDateAndTime] = useState(false);
+
+    const [extractedDate, setExtractedDate] = useState('');
+    const [extractedTime, setExtractedTime] = useState('');
+    const [pickUpLocation, setPickUpLocation] = useState("");
+    const [to, setTo] = useState("");
+    const [from, setFrom] = useState("");
+    const [driverId, setDriverId] = useState("");
+    const [money, setMoney] = useState("");
+    const [selectedRowIndex, setSelectedRowIndex] = useState(null);
+
+    
     const handleChange = date => {
         setSelectedDate(date);
     };
-
     function smoothScroll(target) {
         const targetElement = document.getElementById(target);
         if (targetElement) {
@@ -21,6 +46,165 @@ const Home = () => {
                 behavior: 'smooth'
             });
         }
+    }
+
+    const getProtectedData = async (accessToken) => {
+        try {
+          const response = await axios.get('http://localhost:8002/protected', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/json'
+            }
+          });
+          return response.data;
+        } catch (error) {
+            throw error;
+        }
+      };
+
+    useEffect(()=>{
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        if (storedToken) {
+          setToken(storedToken);
+        }
+    },[token])
+
+    useEffect(() => {
+        if (token) {
+          const fetchData = async () => {
+            try {
+              const user = await getProtectedData(token);
+              console.log(user);
+              setUser(user);
+            } catch (error) {
+              console.log(error);
+            }
+          };
+    
+          fetchData();
+        }
+      }, [token]);
+
+    useEffect(() => {
+        const dateTime = new Date(selectedDate);
+        const extractedDate = dateTime.toDateString(); // Extracting date
+        const extractedTime = dateTime.toLocaleTimeString(); // Extracting time
+    
+        setExtractedDate(extractedDate);
+        setExtractedTime(extractedTime);
+      }, [selectedDate]);
+
+    const handleInputChange = (event) => {
+        const inputValue = event.target.value;
+        if(inputValue){
+            setSelectedLocation(inputValue); // Update selectedLocation state
+            const filtered = fromLocations.filter(location =>
+                location.toLowerCase().includes(inputValue.toLowerCase())
+            );
+            setFilteredLocations(filtered);
+        }else{
+            setSelectedLocation("")
+        }
+        
+    };
+
+    // Function to handle click on filtered location
+    const handleLocationClick = (location) => {
+        setSelectedLocation(location);
+        setFilteredLocations([]);
+    };
+
+    const handleToInputChange = (event) => {
+        const inputValue = event.target.value;
+        if(inputValue){
+            setSelectedToLocation(inputValue); // Update selectedLocation state
+            const filtered = toLocations.filter(location =>
+                location.toLowerCase().includes(inputValue.toLowerCase())
+            );
+            setFilteredToLocations(filtered);
+        }else{
+            setSelectedToLocation("")
+        }
+        
+    };
+
+    // Function to handle click on filtered location
+    const handleToLocationClick = (location) => {
+        setSelectedToLocation(location);
+        setFilteredToLocations([]);
+    };
+
+    useEffect(()=>{
+
+        axios.get("http://localhost:8002/find-from-routes")
+        .then(res=>{
+            console.log(res.data)
+            setFromLocations(res.data);
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+
+        axios.get("http://localhost:8002/find-to-routes")
+        .then(res=>{
+            console.log(res.data)
+            setToLocations(res.data);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+
+    },[])
+
+    const handleRouteDetail = () => {
+
+        axios.get(`http://localhost:8002/route-detail/${selectedLocation}/${selectedToLocation}`)
+        .then(res=>{
+            console.log(res.data);
+            setRouteDetail(res.data);
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+
+    const renderStars = (numStars) => {
+        const stars = [];
+        for (let i = 0; i < numStars; i++) {
+            stars.push(<i key={i} className='fa fa-star rate'></i>);
+        }
+        for (let i = numStars; i < 5; i++) {
+            stars.push(<i key={i} className='fa fa-star'></i>);
+        }
+        return stars;
+    };
+
+    const handleBooking = () => {
+        const bookingData = {
+            driverId,
+            time:extractedTime,
+            date:extractedDate,
+            customerId:user.id,
+            from,
+            to,
+            money,
+            pickUpLocation
+
+        }
+
+        axios.post("http://localhost:8002/create-new-booking", bookingData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json'
+            }
+        })
+        .then(res=>{
+            console.log(res.data);
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+
     }
 
     return (
@@ -55,37 +239,47 @@ const Home = () => {
                                 <div className="from-group mb-4">
                                     <div className='relative'>
                                         <label htmlFor="from" className='home-book-input-label'>From</label>
-                                        <input className="form-control txt-field home-book-input mb-0" type="text" name="from" placeholder="Search Location" />
+                                        <input className="form-control txt-field home-book-input mb-0" type="text" name="from" placeholder="Search Location" 
+                                        value={selectedLocation} 
+                                        onChange={handleInputChange} required />
 
-                                        {/* <div className='search-result-data-area custom'>
-                                            <div className='search-result-data'>Location 1</div>
-                                            <div className='search-result-data'>Location 1</div>
-                                            <div className='search-result-data'>Location 1</div>
-                                            <div className='search-result-data'>Location 1</div>
-                                            <div className='search-result-data'>Location 1</div>
-                                            <div className='search-result-data'>Location 1</div>
-                                            <div className='search-result-data'>Location 1</div>
-                                        </div> */}
+                                        <div className='search-result-data-area custom'>
+                                        {filteredLocations.map((location, index) => (
+                                            <div
+                                                key={index}
+                                                className='search-result-data'
+                                                onClick={() => handleLocationClick(location)}
+                                            >
+                                                {location}
+                                            </div>
+                                        ))}
+                                        </div>
 
                                     </div>
                                 </div>
                                 <div className="from-group mb-4">
                                     <div className='relative'>
                                         <label htmlFor="from" className='home-book-input-label'>To</label>
-                                        <input className="form-control txt-field home-book-input mb-0" type="text" name="to" placeholder="Search Location" />
-                                        {/* <div className='search-result-data-area custom'>
-                                        <div className='search-result-data'>Location 1</div>
-                                        <div className='search-result-data'>Location 1</div>
-                                        <div className='search-result-data'>Location 1</div>
-                                        <div className='search-result-data'>Location 1</div>
-                                        <div className='search-result-data'>Location 1</div>
-                                        <div className='search-result-data'>Location 1</div>
-                                        <div className='search-result-data'>Location 1</div>
-                                    </div> */}
+                                        <input className="form-control txt-field home-book-input mb-0" type="text" name="to" placeholder="Search Location" 
+                                        value={selectedToLocation} 
+                                        onChange={handleToInputChange} required />
+
+                                        <div className='search-result-data-area custom'>
+                                        {filteredToLocations.map((location, index) => (
+                                            <div
+                                                key={index}
+                                                className='search-result-data'
+                                                onClick={() => handleToLocationClick(location)}
+                                            >
+                                                {location}
+                                            </div>
+                                        ))}
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <button type='button' className="btn btn-default btn-lg btn-block text-center text-uppercase make-reserve-btn" data-toggle="modal" data-target="#exampleModal">SUBMIT</button>
+                                    <button type='button' className="btn btn-default btn-lg btn-block text-center text-uppercase make-reserve-btn" data-toggle="modal" data-target="#exampleModal"
+                                    onClick={handleRouteDetail} disabled={!(selectedLocation && selectedToLocation)}>SUBMIT</button>
                                 </div>
                             </form>
                         </div>
@@ -238,13 +432,13 @@ const Home = () => {
                                     <div className="col-6">
                                         <div className='selected-location'>
                                             <h6 className='text-orange'>From : </h6>
-                                            <h6 className='text-white sub-text'>Jaffna</h6>
+                                            <h6 className='text-white sub-text'>{selectedLocation}</h6>
                                         </div>
                                     </div>
                                     <div className="col-6">
                                         <div className='selected-location'>
                                             <h6 className='text-orange'>To : </h6>
-                                            <h6 className='text-white sub-text'>India</h6>
+                                            <h6 className='text-white sub-text'>{selectedToLocation}</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -263,32 +457,43 @@ const Home = () => {
                                                     <th>Mobile Number</th>
                                                     <th>Amount</th>
                                                     <th>Rating</th>
-                                                    <th className='text-center'>Select</th>
+                                                    {user?.role === "Customer" &&<th className='text-center'>Select</th>}
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>01.</td>
-                                                    <td>P.Vincent</td>
-                                                    <td>0770550456</td>
-                                                    <td>100 LKR</td>
-                                                    <td className='verical-align-middle'>
-                                                        <div className="current-rating">
-                                                            <i className='fa fa-star rate'></i>
-                                                            <i className='fa fa-star rate'></i>
-                                                            <i className='fa fa-star rate'></i>
-                                                            <i className='fa fa-star'></i>
-                                                            <i className='fa fa-star'></i>
-                                                        </div>
-                                                    </td>
-                                                    <td className='text-center'>
-                                                        <button className='btn no-radius view-btn btn-success'>
-                                                            <i className='fa fa-check mr-2'> Select</i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-
-                                            </tbody>
+                                            {routeDetail.length>0 ?
+                                                <tbody>
+                                                {routeDetail.map((rout, index) => (
+                                                    <tr key={index}>
+                                                        <td>{index + 1}.</td>
+                                                        <td>{rout?.driver?.userName}</td>
+                                                        <td>{rout?.driver?.phoneNum}</td>
+                                                        <td>{rout?.money}</td>
+                                                        <td className='verical-align-middle'>
+                                                            <div className="current-rating">
+                                                                {renderStars(rout?.driver?.rating)}
+                                                            </div>
+                                                        </td>
+                                                        {user?.role === "Customer" &&<td className='text-center'>
+                                                            <button
+                                                                className='btn no-radius view-btn btn-success'
+                                                                onClick={() => {
+                                                                    setSelectedRowIndex(index);
+                                                                    setShowDateAndTime(true);
+                                                                    setDriverId(rout?.driver?.id);
+                                                                    setTo(rout?.to);
+                                                                    setFrom(rout?.from);
+                                                                    setMoney(rout?.money);
+                                                                }}
+                                                                disabled={selectedRowIndex === index} // Disable if this row is selected
+                                                            >
+                                                                <i className='fa fa-check mr-2'>Select</i>
+                                                            </button>
+                                                        </td>}
+                                                    </tr>
+                                                ))}
+                                                </tbody> : <p>No Driver Details!</p>
+                                            }
+                                            
                                         </table>
                                     </div>
                                 </div>
@@ -296,6 +501,7 @@ const Home = () => {
                             {/*  */}
 
                             {/* booking form here */}
+                            {showDateAndTime &&
                             <div className="row">
                                 <div className="col-12">
                                     <form action="">
@@ -304,7 +510,9 @@ const Home = () => {
                                                 <div className="col-12 col-lg-6">
                                                     <div className="form-group">
                                                         <label htmlFor="" className='form-label absolute text-orange'>Pickup Location</label>
-                                                        <input type="text" className='form-control dark-theme' placeholder='Enter your pickup location' />
+                                                        <input type="text" className='form-control dark-theme' placeholder='Enter your pickup location'
+                                                        value={pickUpLocation}
+                                                        onChange={(e)=>setPickUpLocation(e.target.value)} />
                                                     </div>
                                                 </div>
 
@@ -327,13 +535,18 @@ const Home = () => {
                                         </div>
                                     </form>
                                 </div>
-                            </div>
+                            </div>}
                             {/*  */}
 
                         </div>
                         <div class="modal-footer dark-theme">
+                        {!(user?.role === "Customer") &&<button class="btn no-radius btn-orange" data-dismiss="modal"
+                        onClick={()=>navigate("/log-in")}>Please login as Customer to Book....</button>}
                             <button type="button" class="btn no-radius btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn no-radius btn-orange">Book</button>
+                            {user?.role === "Customer" &&<button type="button" class="btn no-radius btn-orange"
+                            onClick={()=>handleBooking()}
+                            disabled={routeDetail.length===0}>Book</button>}
+                            
                         </div>
                     </div>
                 </div>

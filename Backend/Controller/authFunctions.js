@@ -365,14 +365,14 @@ const getAllCreatedTo = async (req, res) => {
 const createBooking = async (req, res) => {
     try {
         const bookingId = uuidv4();
-        const bookingTime = moment().format('hh:mmA'); // Format time as "10:15PM"
-        const bookingDate = moment().format('DD/MM/YYYY'); // Format date as "dd/mm/yyyy"
-        const { driverId, customerId, from, to, money, pickUpLocation } = req.body;
+        // const bookingTime = moment().format('hh:mmA'); // Format time as "10:15PM"
+        // const bookingDate = moment().format('DD/MM/YYYY'); // Format date as "dd/mm/yyyy"
+        const { driverId, customerId, from, to, money, pickUpLocation, time, date} = req.body;
         const newBookingDetail = new bookingDetail({
             id:bookingId,
             driverId,
-            time: bookingTime,
-            date: bookingDate,
+            time,
+            date,
             customerId,
             from,
             to,
@@ -519,7 +519,6 @@ const giveRating = async (req, res) => {
     }
 };
 
-
 /* change the availability of driver */
 const changingAvailability = async (req, res) => {
     try {
@@ -548,9 +547,50 @@ const changingAvailability = async (req, res) => {
     }
 };
 
+/* get all bookings  */
+const getAllBookingsForAdmin = async (req, res) => {
+    try {
+        // const { driverId } = req.params;
+        const allBookingsForYou = await bookingDetail.find();
+        
+        if (allBookingsForYou.length === 0) {
+            return res.status(404).json({ error: "No booking for you!" });
+        }
+        
+        const updatedBookingDetail = await Promise.all(
+            allBookingsForYou.map(async booking => {
+                const correspondingCustomer = await customer.findOne({ id: booking.customerId });
+                const correspondingDriver = await driver.findOne({ id: booking.driverId });
+                return {
+                    bookingDetails:booking.toObject(),
+                    customerDetatls:(correspondingCustomer && correspondingCustomer.toObject()),
+                    driverDetails:(correspondingDriver && correspondingDriver.toObject())
+                };
+            })
+        );
+        
+        res.status(200).json(updatedBookingDetail);
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return res.status(500).json({ error: err.message });
+    }
+};
 
-
-
+/* get all from route */
+const getAllRoutesForDriver = async (req, res) => {
+    try {
+        const {driverId} = req.params;
+        const allRoutesForDriver = await fromToMoney.find({driverId});
+        if (allRoutesForDriver.length === 0) {
+            return res.status(404).json({ error: "No data" });
+        }
+        
+        res.status(200).json(allRoutesForDriver);
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return res.status(500).json({ error: err.message });
+    }
+};
 
 module.exports = {
     createCustomer,
@@ -567,4 +607,6 @@ module.exports = {
     getAllBookingsCustomer,
     giveRating,
     changingAvailability,
+    getAllBookingsForAdmin,
+    getAllRoutesForDriver,
 }

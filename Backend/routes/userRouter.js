@@ -14,8 +14,11 @@ const {
     getAllBookingsCustomer,
     giveRating,
     changingAvailability,
+    getAllBookingsForAdmin,
+    getAllRoutesForDriver,
 
 } = require("../Controller/authFunctions");
+const driver = require("../dataBase/driver");
 const employeeAuth = require("../middleware/employeeAuth");
 
 //create user
@@ -39,8 +42,14 @@ router.post("/login-operator", async (req, res) => {
   });
 
 /* protected route */
-router.get("/protected", employeeAuth, (req, res) => {
+router.get("/protected", employeeAuth, async(req, res) => {
+  if(req.user.role === "Driver"){
+    const updatedUserInfo = await driver.findOne({id:req.user.id});
+    return  res.json(updatedUserInfo);
+  }else{
     return res.json(req.user);
+  }
+    
   })
 
 //get all users by admin
@@ -79,6 +88,10 @@ router.patch("/update-driver-rating", employeeAuth, giveRating);
 //change the availability of driver
 router.patch("/changing-availability-driver", employeeAuth, changingAvailability);
 
+//find all bookings for admin
+router.get("/all-bookings-with-customer-driver-details", employeeAuth, getAllBookingsForAdmin);
 
+//get all routes for driver
+router.get("/all-routes-driver/:driverId", employeeAuth, getAllRoutesForDriver);
 
 module.exports = router;

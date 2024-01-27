@@ -74,7 +74,7 @@ const Login = () => {
             })
             .catch(err=>{
                 console.log(err)
-                showErrorMessage("Register failed!")
+                showErrorMessage("Login failed!")
             })
 
     }

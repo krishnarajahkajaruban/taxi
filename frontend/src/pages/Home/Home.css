@@ -256,3 +256,11 @@
     border-radius: 10px;
     background-color: transparent;
 }
+
+.make-reserve-btn:disabled,
+    .make-reserve-btn[disabled]{
+    background: #DDD !important;
+    color: #000 !important;
+    border: none !important;
+    cursor: not-allowed;
+}
