@@ -1,6 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from  'axios';
 
 export const Header = () => {
+    const [token, setToken] = useState("");
+    const [user, setUser] = useState();
+   
+    
+
+    const getProtectedData = async (accessToken) => {
+        try {
+          const response = await axios.get('http://localhost:8002/protected', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/json'
+            }
+          });
+          return response.data;
+        } catch (error) {
+            throw error;
+        }
+      };
+
+    useEffect(()=>{
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        if (storedToken) {
+          setToken(storedToken);
+        } 
+    },[])
+
+    useEffect(() => {
+        if (token) {
+          const fetchData = async () => {
+            try {
+              const user = await getProtectedData(token);
+              console.log(user);
+              setUser(user);
+              
+            } catch (error) {
+              console.log(error);
+              
+            }
+          };
+    
+          fetchData();
+        }
+      }, [token]);
 
     return (
         <header id="header">
@@ -29,12 +73,12 @@ export const Header = () => {
                             </li>
                             <li><a href="elements.html">Elements</a></li> */}
                             <li><a href="/contact-us">Contact</a></li>
-                            <li><a href="/log-in" className="btn header-login-btn">LOGIN</a></li>
-                            <li>
+                            {!user && <li><a href="/log-in" className="btn header-login-btn">LOGIN</a></li>}
+                            {user && <li>
                                 <a href="/Dashboard" className='profile-btn'>
                                     <i className='fa fa-user'></i>
                                 </a>
-                            </li>
+                            </li>}
                         </ul>
                     </nav>
                 </div>

@@ -38,6 +38,11 @@ router.post("/login-operator", async (req, res) => {
     await userLogin(req.body, ["Operator"], res);
   });
 
+/* protected route */
+router.get("/protected", employeeAuth, (req, res) => {
+    return res.json(req.user);
+  })
+
 //get all users by admin
 router.get("/all-users", employeeAuth, findAllUsersForAdmin);
 
@@ -73,5 +78,7 @@ router.patch("/update-driver-rating", employeeAuth, giveRating);
 
 //change the availability of driver
 router.patch("/changing-availability-driver", employeeAuth, changingAvailability);
+
+
 
 module.exports = router;

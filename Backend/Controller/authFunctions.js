@@ -12,6 +12,7 @@ const fromToMoney = require("../dataBase/fromToMoney");
 const bookingDetail = require("../dataBase/bookingDetail");
 
 
+
 /* create User */
 const createCustomer = async (req, res) => {
     
@@ -498,31 +499,26 @@ const getAllBookingsCustomer = async (req, res) => {
 /* rate the driver */
 const giveRating = async (req, res) => {
     try {
-        const { bookingId, ratingNum } = req.body;
-        const correspondingBooking = await bookingDetail.findOne({ id: bookingId });
-
-        if (!correspondingBooking) {
-            return res.status(404).json({ error: "Booking not found!" });
-        }
+        const { driverId, ratingNum } = req.body;
 
         // Assuming you've properly imported the `driver` model
-
-        const ratingTheDriver = await driver.findOneAndUpdate(
-            { id: correspondingBooking.driverId },
+        const updatedDriver = await driver.findOneAndUpdate(
+            { id: driverId },
             { $set: { rating: ratingNum } },
             { new: true } // This ensures the updated document is returned
         );
 
-        if (!ratingTheDriver) {
+        if (!updatedDriver) {
             return res.status(404).json({ error: "Driver not found!" });
         }
 
-        return res.status(201).json({ message: "Rating Updated", ratingTheDriver });
+        return res.status(200).json({ message: "Rating Updated", driver: updatedDriver });
     } catch (err) {
         // Handle any errors that occur during the process
         return res.status(500).json({ error: err.message });
     }
 };
+
 
 /* change the availability of driver */
 const changingAvailability = async (req, res) => {
@@ -551,6 +547,8 @@ const changingAvailability = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
+
+
 
 
 
