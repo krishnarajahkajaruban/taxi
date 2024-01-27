@@ -25,28 +25,28 @@ const Services = () => {
                 <div className="container">
                     <div className="row section-title">
                         <h1>What Services we offer to our clients</h1>
-                        <p>Who are in extremely love with eco friendly system.</p>
+                        <p>Effortless Travel Solutions for Every Occasion.</p>
                     </div>
                     <div className="row">
                         <div className="col-lg-4 single-service">
                             <span className="lnr lnr-car"></span>
-                            <a href="#"><h4>Taxi Service</h4></a>
+                            <a href="#"><h4>City Rides</h4></a>
                             <p>
-                                Usage of the Internet is becoming more common due to rapid advancement of technology and power.
+                                Explore your city with ease. Book a cab for short trips or errands within the city limits.
                             </p>
                         </div>
                         <div className="col-lg-4 single-service">
-                            <span className="lnr lnr-briefcase"></span>
-                            <a href="#"><h4>Office Pick-ups</h4></a>
+                            <span className="lnr lnr-clock"></span>
+                            <a href="#"><h4>24/7 Availability</h4></a>
                             <p>
-                                Usage of the Internet is becoming more common due to rapid advancement of technology and power.
+                                Round-the-clock service to cater to your travel needs anytime, anywhere.
                             </p>
                         </div>
                         <div className="col-lg-4 single-service">
-                            <span className="lnr lnr-bus"></span>
-                            <a href="#"><h4>Event Transportation</h4></a>
+                            <span className="lnr lnr-home"></span>
+                            <a href="#"><h4>Safety Measures</h4></a>
                             <p>
-                                Usage of the Internet is becoming more common due to rapid advancement of technology and power.
+                                Your safety is our priority. Our drivers are trained professionals ensuring a secure journey.
                             </p>
                         </div>
                     </div>
@@ -57,14 +57,11 @@ const Services = () => {
                 <div className="container">
                     <div className="overlay overlay-bg"></div>
                     <div className="row align-items-center section-gap">
-                        <div className="col-lg-8">
-                            <h1>Experience Great Support</h1>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+                        <div className="col-lg-12">
+                            <h1 className='text-center'>Redefining Transportation: LANKA CABZ</h1>
+                            <p className='text-center'>
+                                Experience comfort, reliability, and convenience with LANKA CABZ, your trusted transportation partner. From city rides to airport transfers, we ensure seamless journeys every time.
                             </p>
-                        </div>
-                        <div className="col-lg-4 btn-left">
-                            <a href="#" className="primary-btn">Reach Our Support Team</a>
                         </div>
                     </div>
                 </div>
@@ -77,12 +74,15 @@ const Services = () => {
                             <img className="img-fluid" src="img/about-img.jpg" alt="" />
                         </div>
                         <div className="col-lg-6 about-right">
-                            <h1>Globally Connected
-                                by Large Network</h1>
-                            <h4>We are here to listen from you deliver exellence</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor.
+                            <h1>Experience Convenience with LANKA CABZ</h1>
+                            <h4>Your Reliable Transport: LANKA CABZ</h4>
+                            <p>
+                                At LANKA CABZ, we're dedicated to providing you with the utmost convenience in transportation. Whether you need a quick city ride, a hassle-free airport transfer, or a comfortable journey to an outstation destination, we've got you covered. Our commitment to reliability means you can trust us to be there when you need us, every time.
                             </p>
-                            <a className="text-uppercase primary-btn" href="#">Get Details</a>
+
+                            <p>
+                                With a focus on safety and comfort, our professional drivers ensure that your journey with LANKA CABZ is not just convenient, but also enjoyable. Our fleet of well-maintained vehicles is equipped to meet your diverse needs, whether you're traveling alone or with a group.
+                            </p>
                         </div>
                     </div>
                 </div>

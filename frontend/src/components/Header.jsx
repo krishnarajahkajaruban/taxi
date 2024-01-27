@@ -28,7 +28,7 @@ export const Header = () => {
                                 </ul>
                             </li> */}
 
-                            <li><a href="/contact-us">Contact</a></li>
+                            {/* <li><a href="/contact-us">Contact</a></li> */}
                             <li><a href="/log-in" className="btn header-login-btn">LOGIN</a></li>
                             <li className="menu-has-children">
                                 <a href="#" className='profile-btn'>
