@@ -365,14 +365,14 @@ const getAllCreatedTo = async (req, res) => {
 const createBooking = async (req, res) => {
     try {
         const bookingId = uuidv4();
-        const bookingTime = moment().format('hh:mmA'); // Format time as "10:15PM"
-        const bookingDate = moment().format('DD/MM/YYYY'); // Format date as "dd/mm/yyyy"
-        const { driverId, customerId, from, to, money, pickUpLocation } = req.body;
+        // const bookingTime = moment().format('hh:mmA'); // Format time as "10:15PM"
+        // const bookingDate = moment().format('DD/MM/YYYY'); // Format date as "dd/mm/yyyy"
+        const { driverId, customerId, from, to, money, pickUpLocation, time, date} = req.body;
         const newBookingDetail = new bookingDetail({
             id:bookingId,
             driverId,
-            time: bookingTime,
-            date: bookingDate,
+            time,
+            date,
             customerId,
             from,
             to,
