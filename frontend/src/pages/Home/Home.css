@@ -180,3 +180,11 @@
     border: 2px solid #000 !important;
     padding: 20px;
 }
+
+.make-reserve-btn:disabled,
+    .make-reserve-btn[disabled]{
+    background: #DDD !important;
+    color: #000 !important;
+    border: none !important;
+    cursor: not-allowed;
+}

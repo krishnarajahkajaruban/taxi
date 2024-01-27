@@ -519,7 +519,6 @@ const giveRating = async (req, res) => {
     }
 };
 
-
 /* change the availability of driver */
 const changingAvailability = async (req, res) => {
     try {
@@ -548,7 +547,34 @@ const changingAvailability = async (req, res) => {
     }
 };
 
-
+/* get all bookings  */
+const getAllBookingsForAdmin = async (req, res) => {
+    try {
+        // const { driverId } = req.params;
+        const allBookingsForYou = await bookingDetail.find();
+        
+        if (allBookingsForYou.length === 0) {
+            return res.status(404).json({ error: "No booking for you!" });
+        }
+        
+        const updatedBookingDetail = await Promise.all(
+            allBookingsForYou.map(async booking => {
+                const correspondingCustomer = await customer.findOne({ id: booking.customerId });
+                const correspondingDriver = await driver.findOne({ id: booking.driverId });
+                return {
+                    bookingDetails:booking.toObject(),
+                    customerDetatls:correspondingCustomer.toObject(),
+                    driverDetails:correspondingDriver.toObject()
+                };
+            })
+        );
+        
+        res.status(200).json(updatedBookingDetail);
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return res.status(500).json({ error: err.message });
+    }
+};
 
 
 
@@ -567,4 +593,5 @@ module.exports = {
     getAllBookingsCustomer,
     giveRating,
     changingAvailability,
+    getAllBookingsForAdmin,
 }

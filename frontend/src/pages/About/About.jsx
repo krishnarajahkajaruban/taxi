@@ -2,6 +2,8 @@ import React from 'react';
 import Layout from '../../components/Layout';
 import { Footer } from '../../components/Footer';
 
+import './About.css';
+
 const Home = () => {
 
     return (
@@ -28,12 +30,11 @@ const Home = () => {
                             <img className="img-fluid" src="../img/about-img.jpg" alt="" />
                         </div>
                         <div className="col-lg-6 about-right">
-                            <h1>Globally Connected
-                                by Large Network</h1>
-                            <h4>We are here to listen from you deliver exellence</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor.
+                            <h1>Empowering Your Journeys with LANKA CABZ</h1>
+                            <h4>Experience seamless, reliable, and comfortable travel with LANKA CABZ.</h4>
+                            <p>
+                                At LANKA CABZ, we're more than just a transportation service. We're your trusted partner in empowering seamless, reliable, and comfortable journeys. With a commitment to excellence, safety, and customer satisfaction, we strive to redefine your travel experiences. From city rides to airport transfers, corporate travel to special events, our dedicated team ensures that every ride with LANKA CABZ is a journey worth remembering. Join us as we embark on this road together, making travel not just a necessity, but an enjoyable experience.
                             </p>
-                            <a className="text-uppercase primary-btn" href="#">Get Details</a>
                         </div>
                     </div>
                 </div>
@@ -42,27 +43,67 @@ const Home = () => {
             <section className="image-gallery-area section-gap">
                 <div className="container">
                     <div className="row section-title">
-                        <h1>Image Gallery that we like to share</h1>
-                        <p>Who are in extremely love with eco friendly system.</p>
+                        <h1>Empowering Journeys: Discover LANKA CABZ</h1>
+                        <p>Your Partner for Reliable and Comfortable Transportation</p>
                     </div>
                     <div className="row">
                         <div className="col-lg-4 single-gallery">
-                            <a href="img/g1.jpg" className="img-gal"><img className="img-fluid" src="img/g1.jpg" alt="" /></a>
-                            <a href="img/g4.jpg" className="img-gal"><img className="img-fluid" src="img/g4.jpg" alt="" /></a>
+                            <div className='sub-about-area'>
+                                <h3>City Rides</h3>
+                                <h6>Explore with Ease: City Rides by LANKA CABZ</h6>
+                                <p>
+                                    Navigate urban landscapes effortlessly with LANKA CABZ. Our city rides offer quick and reliable transportation for all your errands and short trips within city limits. Whether you're running errands, meeting friends, or exploring local attractions, trust LANKA CABZ to get you there safely and on time.
+                                </p>
+                            </div>
+
+                            <div className='sub-about-area'>
+                                <h3>Airport Transfers</h3>
+                                <h6>Seamless Airport Travel with LANKA CABZ</h6>
+                                <p>
+                                    Make your airport journey stress-free with LANKA CABZ. Our seamless airport transfer services ensure prompt and efficient pickups and drop-offs, so you can relax and enjoy your travel experience. Whether you're arriving or departing, trust LANKA CABZ for reliable transportation to and from the airport.
+                                </p>
+                            </div>
                         </div>
                         <div className="col-lg-4 single-gallery">
-                            <a href="img/g2.jpg" className="img-gal"><img className="img-fluid" src="img/g2.jpg" alt="" /></a>
-                            <a href="img/g5.jpg" className="img-gal"><img className="img-fluid" src="img/g5.jpg" alt="" /></a>
+                            <div className='sub-about-area'>
+                                <h3>Outstation Trips</h3>
+                                <h6>Discover Beyond City Limits: Outstation Trips by LANKA CABZ</h6>
+                                <p>
+                                    Experience the freedom to explore beyond city boundaries with LANKA CABZ. Our outstation trips offer comfortable rides for long-distance travel to neighboring towns or attractions. Whether it's a weekend getaway or a day trip, trust LANKA CABZ to take you there safely and in style.
+                                </p>
+                            </div>
+
+                            <div className='sub-about-area'>
+                                <h3>Corporate Transport</h3>
+                                <h6>Efficient Business Travel Solutions by LANKA CABZ</h6>
+                                <p>
+                                    Streamline your business travel with LANKA CABZ. Our corporate transport services offer tailored solutions for business travelers, ensuring punctual service and professional chauffeurs. Whether it's attending meetings, conferences, or corporate events, trust LANKA CABZ for efficient and reliable transportation.
+                                </p>
+                            </div>
                         </div>
                         <div className="col-lg-4 single-gallery">
-                            <a href="img/g3.jpg" className="img-gal"><img className="img-fluid" src="img/g3.jpg" alt="" /></a>
-                            <a href="img/g6.jpg" className="img-gal"><img className="img-fluid" src="img/g6.jpg" alt="" /></a>
+                            <div className='sub-about-area'>
+                                <h3>Special Events</h3>
+                                <h6>Elevate Your Occasions with LANKA CABZ</h6>
+                                <p>
+                                    Make your special occasions unforgettable with LANKA CABZ. Whether it's a wedding, party, or other celebration, our special events transportation services ensure elegant rides for you and your guests. Trust LANKA CABZ to add an extra touch of luxury and comfort to your memorable moments.
+                                </p>
+                            </div>
+
+                            <div className='sub-about-area'>
+                                <h3>Medical Assistance</h3>
+                                <h6>Reliable Transport for Medical Appointments by LANKA CABZ</h6>
+                                <p>
+                                    Reach your medical appointments with ease and peace of mind with LANKA CABZ. Our reliable transportation services for medical appointments ensure safe and comfortable rides for patients. Whether it's a routine check-up or a medical procedure, trust LANKA CABZ to get you there on time, every time.
+                                </p>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section className="reviews-area section-gap">
+            {/* <section className="reviews-area section-gap">
                 <div className="container">
                     <div className="row section-title">
                         <h1>Client’s Reviews</h1>
@@ -161,20 +202,17 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             <section className="home-calltoaction-area relative">
                 <div className="container">
                     <div className="overlay overlay-bg"></div>
                     <div className="row align-items-center section-gap">
-                        <div className="col-lg-8">
-                            <h1>Experience Great Support</h1>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+                        <div className="col-lg-12">
+                            <h1 className='text-center'>Redefining Transportation: LANKA CABZ</h1>
+                            <p className='text-center'>
+                                Experience comfort, reliability, and convenience with LANKA CABZ, your trusted transportation partner. From city rides to airport transfers, we ensure seamless journeys every time.
                             </p>
-                        </div>
-                        <div className="col-lg-4 btn-left">
-                            <a href="#" className="primary-btn">Reach Our Support Team</a>
                         </div>
                     </div>
                 </div>

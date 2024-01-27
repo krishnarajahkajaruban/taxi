@@ -18,7 +18,7 @@ const Dashboard = () => {
      //for show success message for payment
      function showSuccessMessage(message) {
         Swal.fire({
-            title: 'Rating Updated!',
+            title: 'Success',
             text: message,
             icon: 'success',
             confirmButtonColor: '#3085d6',
@@ -105,6 +105,10 @@ const Dashboard = () => {
                     const bookings = await GetBookings(`bookings-customer/${user.id}`);
                     console.log(bookings);
                     setAllBookings(bookings)
+                }else if (user?.role === "Admin") {
+                    const bookings = await GetBookings(`all-bookings-with-customer-driver-details`);
+                    console.log(bookings);
+                    setAllBookings(bookings)
                 }
             } catch (error) {
                 console.error("Error fetching bookings:", error);
@@ -114,10 +118,10 @@ const Dashboard = () => {
         fetchBookings();
     }, [user]);
 
-    const handleBookingUser = (userDetail, type) => {
+    const handleBookingUser = (Customer, Driver) => {
         setBookinguserDetail({
-            userDetail,
-            type
+            Customer,
+            Driver
         })
     }
     
@@ -146,12 +150,30 @@ const Dashboard = () => {
         })
         .then(res=>{
             console.log(res.data)
-            showSuccessMessage();
+            showSuccessMessage("Rating Sent");
             window.location.reload()
         })
         .catch(err=>{
             console.log(err)
             showErrorMessage();
+        })
+    }
+
+    const handleConfirm = (id) => {
+        axios.patch(`http://localhost:8002/confirm-booking/${id}`, {id}, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json'
+            }
+        })
+        .then(res=>{
+            console.log(res.data)
+            showSuccessMessage("Booking confirmed")
+            window.location.reload()
+        })
+        .catch(err=>{
+            console.log(err)
+            showErrorMessage()
         })
     }
 
@@ -214,12 +236,27 @@ const Dashboard = () => {
                                                     <h6 className='text-secondary sub-text'>{user.phoneNum}</h6>
                                                 </div>
                                             </div>
+                                            {user?.role === "Driver" &&
+                                            <>
+                                                <hr />
+                                            <div className="row p-2">
+                                                <div className="col-5">
+                                                    <h6 className=''>Current Rating</h6>
+                                                </div>
+                                                <div className="col-7">
+                                                    <div className="current-rating">
+                                                    {renderStars(user?.rating)}
+                                                    </div>
+                                                </div>
+                                            
+                                            </div>
+                                            </>}
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="col-12 login-form-area mt-4">
+                            {allBookings.length>0 ? <div className="col-12 login-form-area mt-4">
                                 <div className="">
                                     <h4 className='text-center mb-4'>BOOKINGS</h4>
                                     <div className="row">
@@ -240,8 +277,9 @@ const Dashboard = () => {
                                                     </thead>
                                                     <tbody>
                                                         {allBookings.map((book, index)=>{
-                                                            const userDetail = book?.customerDetatls || book?.driverDetails
-                                                            const userType = (book?.customerDetatls) ? "Customer" : (book?.driverDetails) ? "Driver" : null
+                                                            const cusDetail = book?.customerDetatls;
+                                                            const driverDeta = book?.driverDetails;
+                                                             
                                                             return (
                                                                 <tr>
                                                                     <td>{index+1}.</td>
@@ -252,13 +290,21 @@ const Dashboard = () => {
                                                                     <td>{book?.bookingDetails?.money}</td>
                                                                     <td className='text-center'>
                                                                         {/* <span className="booking-status pending">Pending</span> */}
-                                                                        <span className="booking-status completed">{book?.bookingDetails?.status}</span>
+                                                                        <span className={`booking-status ${book?.bookingDetails?.status == "Completed" ? "completed" : "pending"}`}>{book?.bookingDetails?.status}</span>
                                                                     </td>
                                                                     <td className='text-center'>
                                                                         <button className='btn view-btn' data-toggle="modal" data-target="#exampleModal"
-                                                                        onClick={()=>handleBookingUser(userDetail, userType)}>
+                                                                        onClick={()=>handleBookingUser(cusDetail, driverDeta)}
+                                                                        >
                                                                             <i className='fa fa-eye'></i>
                                                                         </button>
+
+                                                                        {(user?.role === "Driver" && book?.bookingDetails?.status == "Pending") &&
+                                                                            <button className='btn view-btn btn-success ml-2'
+                                                                            onClick={()=>handleConfirm(book?.bookingDetails?.id)}>
+                                                                                Confirm
+                                                                            </button>
+                                                                        }
                                                                     </td>
                                                                 </tr>
                                                             )
@@ -271,7 +317,7 @@ const Dashboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> : <p>No Bookings Found!</p>}
                         </div>
                     </div>
                 </section>
@@ -282,101 +328,149 @@ const Dashboard = () => {
                     <div className="modal-dialog modal-dialog-centered modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title text-orange" id="exampleModalLabel">{bookingUserDetail?.type} Information</h5>
+                                <h5 className="modal-title text-orange" id="exampleModalLabel">User Information</h5>
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div className="modal-body bg-gray">
-                                <div className="row">
-                                    <div className="col-12 col-lg-4 d-flex align-items-center justify-content-center">
-                                        <div className='user-icon'>
-                                            <i className='fa fa-user'></i>
-                                        </div>
-                                    </div>
-                                    <div className="col-12 col-lg-8">
+                                {bookingUserDetail?.Customer &&
+                                    <>
+                                        <h6 className='pb-3 text-success'>Customer Information</h6>
+                                        <div className='bg-white pt-4 pb-4 pl-3 pr-3'>
                                         <div className="row">
-                                            <div className="col-5">
-                                                <h6 className=''>UserName</h6>
+                                            <div className="col-12 col-lg-4 d-flex align-items-center justify-content-center">
+                                                <div className='user-icon'>
+                                                    <i className='fa fa-user'></i>
+                                                </div>
                                             </div>
-                                            <div className="col-7">
-                                                <h6 className='text-secondary sub-text'>{bookingUserDetail?.userDetail?.userName}</h6>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        <div className="row">
-                                            <div className="col-5">
-                                                <h6 className=''>E-Mail</h6>
-                                            </div>
-                                            <div className="col-7">
-                                                <h6 className='text-secondary sub-text'>{bookingUserDetail?.userDetail?.email}</h6>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        <div className="row">
-                                            <div className="col-5">
-                                                <h6 className=''>Mobile</h6>
-                                            </div>
-                                            <div className="col-7">
-                                                <h6 className='text-secondary sub-text'>{bookingUserDetail?.userDetail?.phoneNum}</h6>
-                                            </div>
-                                        </div>
-                                        {bookingUserDetail?.type === "Driver" &&<hr />}
-                                        {bookingUserDetail?.type === "Driver" &&
-                                           
+                                            <div className="col-12 col-lg-8">
                                                 <div className="row">
                                                     <div className="col-5">
-                                                        <h6 className=''>Availability</h6>
+                                                        <h6 className=''>UserName</h6>
                                                     </div>
                                                     <div className="col-7">
-                                                    {(bookingUserDetail?.userDetail?.availability) ? <h6 className='text-success sub-text'>Available</h6> :
-                                                    <h6 className='text-warning sub-text'>Not Available</h6>}
-                                                        
+                                                        <h6 className='text-secondary sub-text'>{bookingUserDetail?.Customer?.userName}</h6>
                                                     </div>
-                                                </div>}
-                                                {bookingUserDetail?.type === "Driver" &&<hr />}
-                                            {bookingUserDetail?.type === "Driver" &&    <div className="row">
+                                                </div>
+                                                <hr />
+                                                <div className="row">
+                                                    <div className="col-5">
+                                                        <h6 className=''>E-Mail</h6>
+                                                    </div>
+                                                    <div className="col-7">
+                                                        <h6 className='text-secondary sub-text'>{bookingUserDetail?.Customer?.email}</h6>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <div className="row">
+                                                    <div className="col-5">
+                                                        <h6 className=''>Mobile</h6>
+                                                    </div>
+                                                    <div className="col-7">
+                                                        <h6 className='text-secondary sub-text'>{bookingUserDetail?.Customer?.phoneNum}</h6>
+                                                    </div>
+                                                </div>
+                                                
+
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <hr />
+                                    </>
+                                }
+                                {bookingUserDetail?.Driver &&
+                                    <>
+                                        <h6 className='pb-3 text-info'>Driver Information</h6>
+                                        <div className='bg-white pt-4 pb-4 pl-3 pr-3'>
+                                        <div className="row">
+                                        <div className="col-12 col-lg-4 d-flex align-items-center justify-content-center">
+                                            <div className='user-icon'>
+                                                <i className='fa fa-user'></i>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-lg-8">
+                                            <div className="row">
                                                 <div className="col-5">
-                                                    <h6 className=''>Current Rating</h6>
+                                                    <h6 className=''>UserName</h6>
                                                 </div>
                                                 <div className="col-7">
-                                                    <div className="current-rating">
-                                                    {renderStars(bookingUserDetail?.userDetail?.rating)}
+                                                    <h6 className='text-secondary sub-text'>{bookingUserDetail?.Driver?.userName}</h6>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div className="row">
+                                                <div className="col-5">
+                                                    <h6 className=''>E-Mail</h6>
+                                                </div>
+                                                <div className="col-7">
+                                                    <h6 className='text-secondary sub-text'>{bookingUserDetail?.Driver?.email}</h6>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div className="row">
+                                                <div className="col-5">
+                                                    <h6 className=''>Mobile</h6>
+                                                </div>
+                                                <div className="col-7">
+                                                    <h6 className='text-secondary sub-text'>{bookingUserDetail?.Driver?.phoneNum}</h6>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div className="row">
+                                                        <div className="col-5">
+                                                            <h6 className=''>Availability</h6>
+                                                        </div>
+                                                        <div className="col-7">
+                                                        {(bookingUserDetail?.Driver?.availability) ? <h6 className='text-success sub-text'>Available</h6> :
+                                                        <h6 className='text-warning sub-text'>Not Available</h6>}
+                                                            
+                                                        </div>
+                                            </div>
+                                                    <hr />
+                                                <div className="row">
+                                                    <div className="col-5">
+                                                        <h6 className=''>Current Rating</h6>
+                                                    </div>
+                                                    <div className="col-7">
+                                                        <div className="current-rating">
+                                                        {renderStars(bookingUserDetail?.Driver?.rating)}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>}
 
                                         </div>
-                                    </div>
-                                    {bookingUserDetail?.type === "Driver" &&<hr />}
-                                    {bookingUserDetail?.type === "Driver" &&<div className="row pl-2 pr-2">
-                                        <div className="col-12 col-md-6 my-auto">
-                                            <h6 className='mb-0'>Rating</h6>
                                         </div>
-                                        <div className="col-12 col-md-6">
-                                            <div className="form-group mt-2">
-                                                <div class="rating">
-                                                    <input value="5" name="rate" id="star5" type="radio" 
-                                                    onChange={()=>handleRating(bookingUserDetail?.userDetail?.id,5)}/>
-                                                    <label title="text" for="star5"></label>
-                                                    <input value="4" name="rate" id="star4" type="radio" 
-                                                    onChange={()=>handleRating(bookingUserDetail?.userDetail?.id, 4)}/>
-                                                    <label title="text" for="star4"></label>
-                                                    <input value="3" name="rate" id="star3" type="radio"
-                                                    onChange={()=>handleRating(bookingUserDetail?.userDetail?.id, 3)}/>
-                                                    <label title="text" for="star3"></label>
-                                                    <input value="2" name="rate" id="star2" type="radio"
-                                                    onChange={()=>handleRating(bookingUserDetail?.userDetail?.id, 2)} />
-                                                    <label title="text" for="star2"></label>
-                                                    <input value="1" name="rate" id="star1" type="radio"
-                                                    onChange={()=>handleRating(bookingUserDetail?.userDetail?.id, 1)} />
-                                                    <label title="text" for="star1"></label>
+                                        </div>
+                                        <hr />
+                                        <div className="row pl-2 pr-2">
+                                            <div className="col-12 col-md-6 my-auto">
+                                                <h6 className='mb-0'>Rating</h6>
+                                            </div>
+                                            <div className="col-12 col-md-6">
+                                                <div className="form-group mt-2">
+                                                    <div class="rating">
+                                                        <input value="5" name="rate" id="star5" type="radio" 
+                                                        onChange={()=>handleRating(bookingUserDetail?.Driver?.id,5)}/>
+                                                        <label title="text" for="star5"></label>
+                                                        <input value="4" name="rate" id="star4" type="radio" 
+                                                        onChange={()=>handleRating(bookingUserDetail?.Driver?.id, 4)}/>
+                                                        <label title="text" for="star4"></label>
+                                                        <input value="3" name="rate" id="star3" type="radio"
+                                                        onChange={()=>handleRating(bookingUserDetail?.Driver?.id, 3)}/>
+                                                        <label title="text" for="star3"></label>
+                                                        <input value="2" name="rate" id="star2" type="radio"
+                                                        onChange={()=>handleRating(bookingUserDetail?.Driver?.id, 2)} />
+                                                        <label title="text" for="star2"></label>
+                                                        <input value="1" name="rate" id="star1" type="radio"
+                                                        onChange={()=>handleRating(bookingUserDetail?.Driver?.id, 1)} />
+                                                        <label title="text" for="star1"></label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>}
-                                  
-                                    
+                                    </>
+                                }
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
