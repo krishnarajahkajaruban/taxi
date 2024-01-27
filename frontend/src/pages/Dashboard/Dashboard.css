@@ -1,0 +1,98 @@
+.user-icon {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #DDD;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.user-icon i {
+    font-size: 70px;
+    color: #fc973e;
+}
+
+.sub-text {
+    font-weight: 400 !important;
+}
+
+.booking-status {
+    border-radius: 50px;
+    font-size: 13px;
+    padding: 6px 20px;
+    font-weight: 500;
+    box-shadow: inset 0px 0px 8px #0000001c;
+}
+
+.booking-status.pending {
+    color: #ee7c18;
+    background-color: #ffdaba;
+}
+
+
+.booking-status.completed {
+    color: #00b563;
+    background-color: rgb(185, 255, 224);
+}
+
+.view-btn {
+    border-radius: 8px;
+    box-shadow: inset 0px 0px 8px #0000001c;
+    padding: 2px 7px !important;
+}
+
+.current-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.current-rating .rate {
+    color: #fc973e !important;
+}
+
+.bg-gray {
+    background-color: #f3f3f3;
+}
+
+.text-orange {
+    color: #fc973e;
+}
+
+/* //// */
+.rating:not(:checked)>input {
+    position: absolute;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.rating:not(:checked)>label {
+    float: right;
+    cursor: pointer;
+    font-size: 26px;
+    color: #666;
+}
+
+.rating:not(:checked)>label:before {
+    content: '★';
+}
+
+.rating>input:checked+label:hover,
+.rating>input:checked+label:hover~label,
+.rating>input:checked~label:hover,
+.rating>input:checked~label:hover~label,
+.rating>label:hover~input:checked~label {
+    color: #e58e09;
+}
+
+.rating:not(:checked)>label:hover,
+.rating:not(:checked)>label:hover~label {
+    color: #ff9e0b;
+}
+
+.rating>input:checked~label {
+    color: #ffa723;
+}
