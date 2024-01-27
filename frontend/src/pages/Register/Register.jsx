@@ -43,7 +43,7 @@ const Register = () => {
         event.preventDefault();
         console.log(credentials)
         
-        axios.post(`http://localhost:8002/user-reg`, credentials)
+        axios.post(`https://lanka-cabs.onrender.com/user-reg`, credentials)
             .then(res=>{
                 console.log(res.data);
                 showSuccessMessage("Find your Login Credentials in your email")

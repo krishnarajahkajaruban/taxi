@@ -39,7 +39,7 @@ const Dashboard = () => {
             money:routeDetail.amount,
             driverId:user?.id
         }
-        axios.post(`http://localhost:8002/create-new-route-for-driver`, data, {
+        axios.post(`https://lanka-cabs.onrender.com/create-new-route-for-driver`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json'
@@ -80,7 +80,7 @@ const Dashboard = () => {
 
     const getProtectedData = async (accessToken) => {
         try {
-            const response = await axios.get('http://localhost:8002/protected', {
+            const response = await axios.get('https://lanka-cabs.onrender.com/protected', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     Accept: 'application/json'
@@ -122,7 +122,7 @@ const Dashboard = () => {
 
     const GetBookings = async (endPoint) => {
         try {
-            const response = await axios.get(`http://localhost:8002/${endPoint}`, {
+            const response = await axios.get(`https://lanka-cabs.onrender.com/${endPoint}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     Accept: 'application/json'
@@ -183,7 +183,7 @@ const Dashboard = () => {
         const driverId = id
         const ratingNum = num
 
-        axios.patch(`http://localhost:8002/update-driver-rating`, { driverId, ratingNum }, {
+        axios.patch(`https://lanka-cabs.onrender.com/update-driver-rating`, { driverId, ratingNum }, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json'
@@ -201,7 +201,7 @@ const Dashboard = () => {
     }
 
     const handleConfirm = (id) => {
-        axios.patch(`http://localhost:8002/confirm-booking/${id}`, {id}, {
+        axios.patch(`https://lanka-cabs.onrender.com/confirm-booking/${id}`, {id}, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json'
@@ -219,7 +219,7 @@ const Dashboard = () => {
     }
 
     const handleChangeAvailability = (driverId) => {
-        axios.patch(`http://localhost:8002/changing-availability-driver`, {driverId}, {
+        axios.patch(`https://lanka-cabs.onrender.com/changing-availability-driver`, {driverId}, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json'
@@ -238,7 +238,7 @@ const Dashboard = () => {
 
     useEffect(()=>{
         if(token){
-            axios.get(`http://localhost:8002/all-users`, {
+            axios.get(`https://lanka-cabs.onrender.com/all-users`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json'
@@ -262,7 +262,7 @@ const Dashboard = () => {
 
     useEffect(()=>{
         if(user?.role === "Driver"){
-            axios.get(`http://localhost:8002/all-routes-driver/${user?.id}`, {
+            axios.get(`https://lanka-cabs.onrender.com/all-routes-driver/${user?.id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json'

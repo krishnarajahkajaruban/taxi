@@ -10,7 +10,7 @@ export const Header = () => {
 
     const getProtectedData = async (accessToken) => {
         try {
-            const response = await axios.get('http://localhost:8002/protected', {
+            const response = await axios.get('https://lanka-cabs.onrender.com/protected', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     Accept: 'application/json'

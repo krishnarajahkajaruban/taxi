@@ -50,7 +50,7 @@ const Home = () => {
 
     const getProtectedData = async (accessToken) => {
         try {
-          const response = await axios.get('http://localhost:8002/protected', {
+          const response = await axios.get('https://lanka-cabs.onrender.com/protected', {
             headers: {
               Authorization: `Bearer ${token}`,
               Accept: 'application/json'
@@ -136,7 +136,7 @@ const Home = () => {
 
     useEffect(()=>{
 
-        axios.get("http://localhost:8002/find-from-routes")
+        axios.get("https://lanka-cabs.onrender.com/find-from-routes")
         .then(res=>{
             console.log(res.data)
             setFromLocations(res.data);
@@ -145,7 +145,7 @@ const Home = () => {
             console.log(err)
         })
 
-        axios.get("http://localhost:8002/find-to-routes")
+        axios.get("https://lanka-cabs.onrender.com/find-to-routes")
         .then(res=>{
             console.log(res.data)
             setToLocations(res.data);
@@ -158,7 +158,7 @@ const Home = () => {
 
     const handleRouteDetail = () => {
 
-        axios.get(`http://localhost:8002/route-detail/${selectedLocation}/${selectedToLocation}`)
+        axios.get(`https://lanka-cabs.onrender.com/route-detail/${selectedLocation}/${selectedToLocation}`)
         .then(res=>{
             console.log(res.data);
             setRouteDetail(res.data);
@@ -192,7 +192,7 @@ const Home = () => {
 
         }
 
-        axios.post("http://localhost:8002/create-new-booking", bookingData, {
+        axios.post("https://lanka-cabs.onrender.com/create-new-booking", bookingData, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json'

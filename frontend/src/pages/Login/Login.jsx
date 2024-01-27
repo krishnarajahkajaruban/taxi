@@ -59,7 +59,7 @@ const Login = () => {
 
         console.log(endPoint);
         
-        axios.post(`http://localhost:8002/${endPoint}`, credentials)
+        axios.post(`https://lanka-cabs.onrender.com/${endPoint}`, credentials)
             .then(res=>{
                 console.log(res.data);
                 showSuccessMessage("Login Successful!")
