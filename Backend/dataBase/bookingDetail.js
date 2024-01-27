@@ -33,7 +33,16 @@ const bookingDetailSchema = new Schema(
     money: {
         type: String,
         required: true
-    }
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ['Pending', "Completed"]
+    },
+    pickUpLocation: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

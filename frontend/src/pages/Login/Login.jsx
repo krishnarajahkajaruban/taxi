@@ -1,9 +1,83 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '../../components/Layout';
 import { Footer } from '../../components/Footer';
 import './Login.css';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.css';
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
+    const navigate = useNavigate()
+    const intialCredentials = {
+        userName: "",
+        password: "",
+        role: ""
+    }
+    const [credentials , setCredentials] = useState(intialCredentials);
+
+    //for show success message for payment
+    function showSuccessMessage(message) {
+        Swal.fire({
+            title: 'Congratulation!',
+            text: message,
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK',
+        });
+    }
+
+    //for show error message for payment
+    function showErrorMessage(message) {
+        Swal.fire({
+            title: 'Error!',
+            text: message,
+            icon: 'error',
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'OK',
+        });
+    }
+
+    const handleInputChange = (event) => {
+        const {name, value} = event.target;
+        setCredentials({...credentials, [name]:value});
+    }
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(credentials)
+        let endPoint;
+        if(credentials.role === "Admin"){
+            endPoint = "login-admin"
+        }else if(credentials.role === "Customer"){
+            endPoint = "login-customer"
+        }else if(credentials.role === "Driver"){
+            endPoint = "login-driver"
+        }else if (credentials.role === "Operator"){
+            endPoint = "login-operator"
+        }
+
+        console.log(endPoint);
+        
+        axios.post(`http://localhost:8002/${endPoint}`, credentials)
+            .then(res=>{
+                console.log(res.data);
+                showSuccessMessage("Login Successful!")
+                setCredentials(intialCredentials);
+                if (credentials.role === "Customer") {
+                    localStorage.setItem("token", JSON.stringify(res.data.accessToken));
+                    navigate(`/`);
+                }else  {
+                    localStorage.setItem("token", JSON.stringify(res.data.accessToken));
+                    navigate(`/dashboard`);
+                }
+            })
+            .catch(err=>{
+                console.log(err)
+                showErrorMessage("Register failed!")
+            })
+
+    }
 
     return (
         <>
@@ -32,12 +106,16 @@ const Login = () => {
                                 <form action="">
                                     <div className="form-group">
                                         <label htmlFor="user_name" className='form-label'>User Name</label>
-                                        <input name="user_name" placeholder="Enter your user name" className="common-input mb-20 form-control login-input" required="" type="text" />
+                                        <input name="userName" placeholder="Enter your user name" className="common-input mb-20 form-control login-input" required="" type="text" 
+                                        value={credentials.userName}
+                                        onChange={handleInputChange}/>
                                     </div>
 
                                     <div className="form-group">
                                         <label htmlFor="password" className='form-label'>Password</label>
-                                        <input name="password" placeholder="Enter password" className="common-input mb-20 form-control login-input" required="" type="password" />
+                                        <input name="password" placeholder="Enter password" className="common-input mb-20 form-control login-input" required="" type="password" 
+                                        value={credentials.password}
+                                        onChange={handleInputChange}/>
                                     </div>
 
                                     <div className="form-group">
@@ -45,21 +123,25 @@ const Login = () => {
 
                                         <div className="radio-inputs">
                                             <label className="radio">
-                                                <input type="radio" name="role" value="Admin" checked={true} />
+                                                <input type="radio" name="role" value="Admin" 
+                                                onChange={handleInputChange} />
                                                 <span className="name">Admin</span>
                                             </label>
                                             <label className="radio">
-                                                <input type="radio" name="role" value="Operator" />
+                                                <input type="radio" name="role" value="Operator" 
+                                                onChange={handleInputChange}/>
                                                 <span className="name">Operator</span>
                                             </label>
 
                                             <label className="radio">
-                                                <input type="radio" name="role" value="Customer" />
+                                                <input type="radio" name="role" value="Customer" 
+                                                onChange={handleInputChange}/>
                                                 <span className="name">Customer</span>
                                             </label>
 
                                             <label className="radio">
-                                                <input type="radio" name="role" value="Driver" />
+                                                <input type="radio" name="role" value="Driver" 
+                                                onChange={handleInputChange}/>
                                                 <span className="name">Driver</span>
                                             </label>
                                         </div>
@@ -67,7 +149,8 @@ const Login = () => {
 
                                     <div className="">
                                         <div className="alert-msg text-left"></div>
-                                        <button className="btn login-btn">LOGIN</button>
+                                        <button className="btn login-btn"
+                                        onClick={handleSubmit}>LOGIN</button>
                                         <div className='dont-acc-text'>Don't have an account,&nbsp;
                                             <a href="/sign-up">Signup</a>
                                         </div>
