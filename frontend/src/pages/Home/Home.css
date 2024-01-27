@@ -148,12 +148,12 @@
     border-radius: 0px !important;
     background-color: #000;
     border: 1px solid #fc973e !important;
-    color: #c7c7c7 !important;  
+    color: #c7c7c7 !important;
     padding: 8px 16px !important;
     height: auto !important;
 }
 
-.form-control.dark-theme::placeholder{
+.form-control.dark-theme::placeholder {
     color: #8c8c8c !important;
 }
 
@@ -161,22 +161,70 @@
     width: 100% !important;
 }
 
-.verical-align-middle{
+.verical-align-middle {
     vertical-align: middle !important;
 }
 
 
-.btn.no-radius{
+.btn.no-radius {
     border-radius: 0px !important;
 }
 
-.btn-orange{
+.btn-orange {
     background: linear-gradient(#ffd066, #fc973e) !important;
     font-weight: 600 !important;
 }
 
-.book-form-area{
+.book-form-area {
     background-color: #303030;
     border: 2px solid #000 !important;
     padding: 20px;
+}
+
+/* ////////// */
+.react-datepicker__header {
+    background-color: #fc973e !important;
+}
+
+.react-datepicker {
+    background-color: #2e2e2e !important;
+    border-color: #fc973e !important;
+}
+
+.react-datepicker__day {
+    color: #fff !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+    background-color: #fc973e !important;
+    color: #000 !important;
+}
+
+.react-datepicker__navigation-icon::before {
+    color: #000 !important;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
+    background-color: #202020 !important;
+    color: #FFF !important;
+}
+
+.react-datepicker__day--selected {
+    background-color: #fc973e !important;
+    color: #000000 !important;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected {
+    background-color: #000000 !important;
+    color: #fc973e !important;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item:hover {
+    background-color: #fc973e !important;
+    color: #000 !important;
+}
+
+.react-datepicker__day:hover {
+    background-color: #000 !important;
+    color: #fff !important;
 }
