@@ -530,7 +530,7 @@ const Dashboard = () => {
                                 </div>
                             }
 
-                                {(user.role === "Driver" && allRoutes?.length>0) &&
+                                {(user.role === "Driver") &&
                                 <div className="col-12 login-form-area mt-4">
                                     <div className="">
                                         <div className="d-flex align-items-center justify-content-between mb-3">
@@ -540,6 +540,7 @@ const Dashboard = () => {
                                                 Create New
                                             </button>
                                         </div>
+                                        
                                         <div className="row">
                                             <div className="col-12">
 
@@ -553,7 +554,8 @@ const Dashboard = () => {
                                                                 <th>Amount</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        {allRoutes.length>0 ?
+                                                            <tbody>
                                                             {allRoutes.map((routesCharge, index)=>{
                                                                 return(
                                                                     <tr>
@@ -565,7 +567,10 @@ const Dashboard = () => {
                                                                 )
                                                             })}
                                                             
-                                                        </tbody>
+                                                        </tbody> :
+                                                        <></>
+                                                        }
+                                                        
                                                     </table>
                                                 </div>
                                             </div>
