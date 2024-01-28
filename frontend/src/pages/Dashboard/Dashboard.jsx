@@ -392,7 +392,7 @@ const Dashboard = () => {
                                                                 </div>
 
                                                                 <div className='text-right'>
-                                                                    <button type='button' className='btn no-radius btn-success mt-2'
+                                                                    <button type='button' className='btn no-radius btn-success change-status-btn'
                                                                         onClick={() => handleChangeAvailability(user?.id)}>Change</button>
                                                                 </div>
                                                             </div>
