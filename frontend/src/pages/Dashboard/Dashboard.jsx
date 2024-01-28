@@ -570,9 +570,9 @@ const Dashboard = () => {
                                                                 <th>Amount</th>
                                                             </tr>
                                                         </thead>
-                                                        {allRoutes.length>0 ?
+                                                        {allRoutes?.length>0 ?
                                                             <tbody>
-                                                            {allRoutes.map((routesCharge, index)=>{
+                                                            {allRoutes?.map((routesCharge, index)=>{
                                                                 return(
                                                                     <tr>
                                                                         <td>{index+1}.</td>

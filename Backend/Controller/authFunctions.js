@@ -333,8 +333,11 @@ const getAllCreatedFrom = async (req, res) => {
             return res.status(404).json({ error: "No data" });
         }
         
-        const allFromDatas = allFromToDetail.map(fromTo => fromTo.from);
-        const uniqueFromDatas = [...new Set(allFromDatas)]; // Convert to Set to remove duplicates
+        // Convert all 'from' locations to lowercase
+        const allFromDatas = allFromToDetail.map(fromTo => fromTo.from.toLowerCase());
+        
+        // Filter out duplicates
+        const uniqueFromDatas = Array.from(new Set(allFromDatas));
         
         res.status(200).json(uniqueFromDatas);
     } catch (err) {
@@ -342,6 +345,7 @@ const getAllCreatedFrom = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
+
 
 /* get all to route */
 const getAllCreatedTo = async (req, res) => {
@@ -351,7 +355,7 @@ const getAllCreatedTo = async (req, res) => {
             return res.status(404).json({ error: "No data" });
         }
         
-        const allToDatas = allFromToDetail.map(fromTo => fromTo.to);
+        const allToDatas = allFromToDetail.map(fromTo => fromTo.to.toLowerCase());
         const uniqueToDatas = [...new Set(allToDatas)]; // Convert to Set to remove duplicates
         
         res.status(200).json(uniqueToDatas);

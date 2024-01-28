@@ -104,6 +104,7 @@ const Home = () => {
             setFilteredLocations(filtered);
         } else {
             setSelectedLocation("")
+            setFilteredLocations([])
         }
 
     };
@@ -124,6 +125,7 @@ const Home = () => {
             setFilteredToLocations(filtered);
         } else {
             setSelectedToLocation("")
+            setFilteredToLocations([])
         }
 
     };
