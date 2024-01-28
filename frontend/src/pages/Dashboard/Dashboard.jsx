@@ -20,24 +20,24 @@ const Dashboard = () => {
     const [allRoutes, setAllRoutes] = useState([]);
 
     const initialRouteDetail = {
-        fromLocation:"",
-        toLocation:"",
-        amount:""
+        fromLocation: "",
+        toLocation: "",
+        amount: ""
     }
     const [routeDetail, setRouteDetail] = useState(initialRouteDetail)
 
     const handleInputChange = (event) => {
-        const {name, value} = event.target;
-        setRouteDetail({...routeDetail, [name]:value});
+        const { name, value } = event.target;
+        setRouteDetail({ ...routeDetail, [name]: value });
     }
 
     const handleRouteCreate = (event) => {
         event.preventDefault();
         const data = {
-            from:routeDetail.toLocation,
-            to:routeDetail.fromLocation,
-            money:routeDetail.amount,
-            driverId:user?.id
+            from: routeDetail.toLocation,
+            to: routeDetail.fromLocation,
+            money: routeDetail.amount,
+            driverId: user?.id
         }
         axios.post(`https://lanka-cabs.onrender.com/create-new-route-for-driver`, data, {
             headers: {
@@ -45,15 +45,15 @@ const Dashboard = () => {
                 Accept: 'application/json'
             }
         })
-        .then(res=>{
-            console.log(res.data)
-            showSuccessMessage("New Route Created")
-            window.location.reload()
-        })
-        .catch(err=>{
-            console.log(err)
-            showErrorMessage()
-        })
+            .then(res => {
+                console.log(res.data)
+                showSuccessMessage("New Route Created")
+                window.location.reload()
+            })
+            .catch(err => {
+                console.log(err)
+                showErrorMessage()
+            })
     }
 
     //for show success message for payment
@@ -146,7 +146,7 @@ const Dashboard = () => {
                     const bookings = await GetBookings(`bookings-customer/${user.id}`);
                     console.log(bookings);
                     setAllBookings(bookings)
-                }else if (user?.role === "Admin") {
+                } else if (user?.role === "Admin") {
                     const bookings = await GetBookings(`all-bookings-with-customer-driver-details`);
                     console.log(bookings);
                     setAllBookings(bookings)
@@ -189,108 +189,119 @@ const Dashboard = () => {
                 Accept: 'application/json'
             }
         })
-        .then(res=>{
-            console.log(res.data)
-            showSuccessMessage("Rating Sent");
-            window.location.reload()
-        })
-        .catch(err=>{
-            console.log(err)
-            showErrorMessage();
-        })
+            .then(res => {
+                console.log(res.data)
+                showSuccessMessage("Rating Sent");
+                window.location.reload()
+            })
+            .catch(err => {
+                console.log(err)
+                showErrorMessage();
+            })
     }
 
     const handleConfirm = (id) => {
-        axios.patch(`https://lanka-cabs.onrender.com/confirm-booking/${id}`, {id}, {
+        axios.patch(`https://lanka-cabs.onrender.com/confirm-booking/${id}`, { id }, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json'
             }
         })
-        .then(res=>{
-            console.log(res.data)
-            showSuccessMessage("Booking confirmed")
-            window.location.reload()
-        })
-        .catch(err=>{
-            console.log(err)
-            showErrorMessage()
-        })
+            .then(res => {
+                console.log(res.data)
+                showSuccessMessage("Booking confirmed")
+                window.location.reload()
+            })
+            .catch(err => {
+                console.log(err)
+                showErrorMessage()
+            })
     }
 
     const handleChangeAvailability = (driverId) => {
-        axios.patch(`https://lanka-cabs.onrender.com/changing-availability-driver`, {driverId}, {
+        axios.patch(`https://lanka-cabs.onrender.com/changing-availability-driver`, { driverId }, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json'
             }
         })
-        .then(res=>{
-            console.log(res.data)
-            showSuccessMessage("Availability Status Changed")
-            window.location.reload()
-        })
-        .catch(err=>{
-            console.log(err)
-            showErrorMessage()
-        })
+            .then(res => {
+                console.log(res.data)
+                showSuccessMessage("Availability Status Changed")
+                window.location.reload()
+            })
+            .catch(err => {
+                console.log(err)
+                showErrorMessage()
+            })
     }
 
-    useEffect(()=>{
-        if(token){
+    useEffect(() => {
+        if (token) {
             axios.get(`https://lanka-cabs.onrender.com/all-users`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json'
-            }
-            })
-            .then(res=>{
-                console.log(res.data)
-                setResponseUsers(res.data)
-                if(selecteValue === "Customer"){
-                    setAllUsers(res.data?.allCustomer)
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json'
                 }
             })
-            .catch(err=>{
-                console.log(err)
-            })
+                .then(res => {
+                    console.log(res.data)
+                    setResponseUsers(res.data)
+                    if (selecteValue === "Customer") {
+                        setAllUsers(res.data?.allCustomer)
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
 
-            
+
         }
 
-    },[token])
+    }, [token])
 
-    useEffect(()=>{
-        if(user?.role === "Driver"){
+    useEffect(() => {
+        if (user?.role === "Driver") {
             axios.get(`https://lanka-cabs.onrender.com/all-routes-driver/${user?.id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json'
-            }
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json'
+                }
             })
-            .then(res=>{
-                console.log(res.data)
-                setAllRoutes(res.data)
-            })
-            .catch(err=>{
-                console.log(err)
-            })
+                .then(res => {
+                    console.log(res.data)
+                    setAllRoutes(res.data)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         }
-    },[user])
+    }, [user])
 
-    useEffect(()=>{
-        if(selecteValue === "Customer"){
+    useEffect(() => {
+        if (selecteValue === "Customer") {
             setAllUsers(responseUsers?.allCustomer)
-        }else if(selecteValue === "Driver"){
+        } else if (selecteValue === "Driver") {
             setAllUsers(responseUsers.allDriver)
-        }else if(selecteValue === "Operator"){
+        } else if (selecteValue === "Operator") {
             setAllUsers(responseUsers.allOperator)
         }
-    },[selecteValue])
+    }, [selecteValue])
 
     return (
         <>
-            {loading ? <p>Loading...</p> :
+            {loading ? <div className="dot-spinner-area">
+                <div className="dot-spinner">
+                    <div className="dot-spinner__dot"></div>
+                    <div className="dot-spinner__dot"></div>
+                    <div className="dot-spinner__dot"></div>
+                    <div className="dot-spinner__dot"></div>
+                    <div className="dot-spinner__dot"></div>
+                    <div className="dot-spinner__dot"></div>
+                    <div className="dot-spinner__dot"></div>
+                    <div className="dot-spinner__dot"></div>
+                </div>
+            </div> :
                 (user ? <>
                     <Layout />
                     <section className="banner-area relative about-banner" id="home">
@@ -307,228 +318,233 @@ const Dashboard = () => {
                         </div>
                     </section>
 
-                <section className='login-section section-gap'>
-                    <div className="container">
-                        <div className="row login-form-section">
-                            <div className="col-12 login-form-area">
-                                <div className="">
-                                    <h4 className='text-center mb-4'>PROFILE</h4>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-12 col-lg-4 d-flex align-items-center justify-content-center">
-                                            <div className='user-icon'>
-                                                <i className='fa fa-user'></i>
-                                            </div>
-                                        </div>
-                                        <div className="col-12 col-lg-8">
-                                            <div className="row p-2">
-                                                <div className="col-5">
-                                                    <h6 className=''>User Name</h6>
-                                                </div>
-                                                <div className="col-7">
-                                                    <h6 className='text-secondary sub-text'>{user.userName}</h6>
-                                                </div>
-                                            </div>
-                                            <hr />
-                                            <div className="row p-2">
-                                                <div className="col-5">
-                                                    <h6 className=''>E-Mail</h6>
-                                                </div>
-                                                <div className="col-7">
-                                                    <h6 className='text-secondary sub-text'>{user.email}</h6>
-                                                </div>
-                                            </div>
-                                            <hr />
-                                            <div className="row p-2">
-                                                <div className="col-5">
-                                                    <h6 className=''>Mobile</h6>
-                                                </div>
-                                                <div className="col-7">
-                                                    <h6 className='text-secondary sub-text'>{user.phoneNum}</h6>
-                                                </div>
-                                            </div>
-                                            {user?.role === "Driver" &&
-                                            <>
-                                                <hr />
-                                            <div className="row p-2">
-                                                <div className="col-5">
-                                                    <h6 className=''>Current Rating</h6>
-                                                </div>
-                                                <div className="col-7">
-                                                    <div className="current-rating">
-                                                    {renderStars(user?.rating)}
-                                                    </div>
-                                                </div>
-                                            
-                                            </div>
-                                            
-                                            <hr />
-                                            <div className="row p-2">
-                                                <div className="col-5">
-                                                    <h6 className=''>Availability</h6>
-                                                </div>
-                                                <div className="col-7 d-flex justify-content-between align-items-end gap-10">
-                                                    <div className="radio-inputs">
-                                                        <label className="radio">
-                                                            <input type="radio" name="role" value="true" checked={user?.availability}/>
-                                                            <span className="name success">Available</span>
-                                                        </label>
-
-                                                        <label className="radio">
-                                                            <input type="radio" name="role" value="false" checked={!(user?.availability)}/>
-                                                            <span className="name danger">Not Available</span>
-                                                        </label>
-                                                    </div>
-
-                                                    <div className='text-right'> 
-                                                        <button type='button' className='btn no-radius btn-success mt-2'
-                                                        onClick={()=>handleChangeAvailability(user?.id)}>Change</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            </>}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {allBookings?.length>0 ? 
-                            <div className="col-12 login-form-area mt-4">
-                                <div className="">
-                                    <h4 className='text-center mb-4'>BOOKINGS</h4>
-                                    <div className="row">
-                                        <div className="col-12">
-                                            <div className="table-responsive">
-                                                <table className="table table-borderd bg-white">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>No.</th>
-                                                            <th>Date</th>
-                                                            <th>Time</th>
-                                                            <th>From</th>
-                                                            <th>To</th>
-                                                            <th>Amount</th>
-                                                            <th className='text-center'>Status</th>
-                                                            <th className='text-center'>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {allBookings.map((book, index)=>{
-                                                            const cusDetail = book?.customerDetatls;
-                                                            const driverDeta = book?.driverDetails;
-                                                             
-                                                            return (
-                                                                <tr>
-                                                                    <td>{index+1}.</td>
-                                                                    <td>{book?.bookingDetails?.date}</td>
-                                                                    <td>{book?.bookingDetails?.time}</td>
-                                                                    <td>{book?.bookingDetails?.from}</td>
-                                                                    <td>{book?.bookingDetails?.to}</td>
-                                                                    <td>{book?.bookingDetails?.money}</td>
-                                                                    <td className='text-center'>
-                                                                        {/* <span className="booking-status pending">Pending</span> */}
-                                                                        <span className={`booking-status ${book?.bookingDetails?.status == "Completed" ? "completed" : "pending"}`}>{book?.bookingDetails?.status}</span>
-                                                                    </td>
-                                                                    <td className='text-center'>
-                                                                        <button className='btn view-btn' data-toggle="modal" data-target="#exampleModal"
-                                                                        onClick={()=>handleBookingUser(cusDetail, driverDeta)}
-                                                                        >
-                                                                            <i className='fa fa-eye'></i>
-                                                                        </button>
-
-                                                                        {(user?.role === "Driver" && book?.bookingDetails?.status == "Pending") &&
-                                                                            <button className='btn view-btn btn-success ml-2'
-                                                                            onClick={()=>handleConfirm(book?.bookingDetails?.id)}>
-                                                                                Confirm
-                                                                            </button>
-                                                                        }
-                                                                    </td>
-                                                                </tr>
-                                                            )
-                                                        })}
-                                                        
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> : <p>No Bookings Found!</p>}
-
-                            {(user?.role === "Admin" && allUsers?.length>0) &&
-                                <div className="col-12 login-form-area mt-4">
+                    <section className='login-section section-gap'>
+                        <div className="container">
+                            <div className="row login-form-section">
+                                <div className="col-12 login-form-area">
                                     <div className="">
-                                        <h4 className='text-center mb-4'>USERS</h4>
-                                        <div className="bg-white p-3 mb-3">
-                                            <div className="row">
-                                                <div className="col-7 m-auto">
-                                                    <h6 className='text-dark mb-0'>Select User:</h6>
-                                                </div>
-                                                <div className="col-5">
-                                                    <select className='form-control' value={selecteValue}
-                                                    onChange={(e)=>setSelecteValue(e.target.value)}>
-                                                        {/* <option value="">-- Select User --</option> */}
-                                                        <option value="Customer" selected>Customer</option>
-                                                        <option value="Driver">Driver</option>
-                                                        <option value="Operator">Operator</option>
-                                                    </select>
+                                        <h4 className='text-center mb-4'>PROFILE</h4>
+                                        <hr />
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex align-items-center justify-content-center">
+                                                <div className='user-icon'>
+                                                    <i className='fa fa-user'></i>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-12">
-
-                                                <div className="table-responsive">
-                                                    <table className="table table-borderd bg-white">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>No.</th>
-                                                                <th>Name</th>
-                                                                <th>E-Mail</th>
-                                                                <th>Mobile</th>
-                                                                <th>Role</th>
-                                                                {selecteValue === "Driver" &&
-                                                                <>
-                                                                <th className='text-center'>Availability</th>
-                                                                <th>Rating</th>
-                                                                </>}
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {allUsers.map((user, index)=>{
-                                                                return(
-                                                                    <tr>
-                                                                        <td>{index+1}.</td>
-                                                                        <td>{user?.userName}</td>
-                                                                        <td>{user?.email}</td>
-                                                                        <td>{user?.phoneNum}</td>
-                                                                        <td>{user?.role}</td>
-                                                                        {user?.role === "Driver" && 
-                                                                        <>
-                                                                            <td className='text-center'>
-                                                                            {user?.availability ? <span className="booking-status completed">Available</span> :
-                                                                            <span className="booking-status pending">Not Available</span>}
-                                                                        </td>
-                                                                        <td>
-                                                                            <div className="current-rating">
-                                                                            {renderStars(user?.rating)}
-                                                                            </div>
-                                                                        </td>
-                                                                        </>}
-                                                                        
-                                                                    </tr>
-                                                                )
-                                                            })}
-                                                            
-                                                        </tbody>
-                                                    </table>
+                                            <div className="col-12 col-lg-8">
+                                                <div className="row p-2">
+                                                    <div className="col-5">
+                                                        <h6 className=''>User Name</h6>
+                                                    </div>
+                                                    <div className="col-7">
+                                                        <h6 className='text-secondary sub-text'>{user.userName}</h6>
+                                                    </div>
                                                 </div>
+                                                <hr />
+                                                <div className="row p-2">
+                                                    <div className="col-5">
+                                                        <h6 className=''>E-Mail</h6>
+                                                    </div>
+                                                    <div className="col-7">
+                                                        <h6 className='text-secondary sub-text'>{user.email}</h6>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <div className="row p-2">
+                                                    <div className="col-5">
+                                                        <h6 className=''>Mobile</h6>
+                                                    </div>
+                                                    <div className="col-7">
+                                                        <h6 className='text-secondary sub-text'>{user.phoneNum}</h6>
+                                                    </div>
+                                                </div>
+                                                {user?.role === "Driver" &&
+                                                    <>
+                                                        <hr />
+                                                        <div className="row p-2">
+                                                            <div className="col-5">
+                                                                <h6 className=''>Current Rating</h6>
+                                                            </div>
+                                                            <div className="col-7">
+                                                                <div className="current-rating">
+                                                                    {renderStars(user?.rating)}
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <hr />
+                                                        <div className="row p-2">
+                                                            <div className="col-5">
+                                                                <h6 className=''>Availability</h6>
+                                                            </div>
+                                                            <div className="col-7 d-flex justify-content-between align-items-end gap-10">
+                                                                <div className="radio-inputs">
+                                                                    <label className="radio">
+                                                                        <input type="radio" name="role" value="true" checked={user?.availability} />
+                                                                        <span className="name success">Available</span>
+                                                                    </label>
+
+                                                                    <label className="radio">
+                                                                        <input type="radio" name="role" value="false" checked={!(user?.availability)} />
+                                                                        <span className="name danger">Not Available</span>
+                                                                    </label>
+                                                                </div>
+
+                                                                <div className='text-right'>
+                                                                    <button type='button' className='btn no-radius btn-success mt-2'
+                                                                        onClick={() => handleChangeAvailability(user?.id)}>Change</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            }
+
+                                {allBookings?.length > 0 ?
+                                    <div className="col-12 login-form-area mt-4">
+                                        <div className="">
+                                            <h4 className='text-center mb-4'>BOOKINGS</h4>
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <div className="table-responsive">
+                                                        <table className="table table-borderd bg-white">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>No.</th>
+                                                                    <th>Date</th>
+                                                                    <th>Time</th>
+                                                                    <th>From</th>
+                                                                    <th>To</th>
+                                                                    <th>Amount</th>
+                                                                    <th className='text-center'>Status</th>
+                                                                    <th className='text-center'>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {allBookings.map((book, index) => {
+                                                                    const cusDetail = book?.customerDetatls;
+                                                                    const driverDeta = book?.driverDetails;
+
+                                                                    return (
+                                                                        <tr>
+                                                                            <td>{index + 1}.</td>
+                                                                            <td>{book?.bookingDetails?.date}</td>
+                                                                            <td>{book?.bookingDetails?.time}</td>
+                                                                            <td>{book?.bookingDetails?.from}</td>
+                                                                            <td>{book?.bookingDetails?.to}</td>
+                                                                            <td>{book?.bookingDetails?.money}</td>
+                                                                            <td className='text-center'>
+                                                                                {/* <span className="booking-status pending">Pending</span> */}
+                                                                                <span className={`booking-status ${book?.bookingDetails?.status == "Completed" ? "completed" : "pending"}`}>{book?.bookingDetails?.status}</span>
+                                                                            </td>
+                                                                            <td className='text-center'>
+                                                                                <button className='btn view-btn' data-toggle="modal" data-target="#exampleModal"
+                                                                                    onClick={() => handleBookingUser(cusDetail, driverDeta)}
+                                                                                >
+                                                                                    <i className='fa fa-eye'></i>
+                                                                                </button>
+
+                                                                                {(user?.role === "Driver" && book?.bookingDetails?.status == "Pending") &&
+                                                                                    <button className='btn view-btn btn-success ml-2'
+                                                                                        onClick={() => handleConfirm(book?.bookingDetails?.id)}>
+                                                                                        Confirm
+                                                                                    </button>
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    )
+                                                                })}
+
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> :
+                                    <div className="no-data-created-area">
+                                        <div className='no-data-created'>
+                                            <div className='no-data-text'>No Bookings Found!</div>
+                                        </div>
+                                    </div>}
+
+                                {(user?.role === "Admin" && allUsers?.length > 0) &&
+                                    <div className="col-12 login-form-area mt-4">
+                                        <div className="">
+                                            <h4 className='text-center mb-4'>USERS</h4>
+                                            <div className="bg-white p-3 mb-3">
+                                                <div className="row">
+                                                    <div className="col-7 m-auto">
+                                                        <h6 className='text-dark mb-0'>Select User:</h6>
+                                                    </div>
+                                                    <div className="col-5">
+                                                        <select className='form-control' value={selecteValue}
+                                                            onChange={(e) => setSelecteValue(e.target.value)}>
+                                                            {/* <option value="">-- Select User --</option> */}
+                                                            <option value="Customer" selected>Customer</option>
+                                                            <option value="Driver">Driver</option>
+                                                            <option value="Operator">Operator</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-12">
+
+                                                    <div className="table-responsive">
+                                                        <table className="table table-borderd bg-white">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>No.</th>
+                                                                    <th>Name</th>
+                                                                    <th>E-Mail</th>
+                                                                    <th>Mobile</th>
+                                                                    <th>Role</th>
+                                                                    {selecteValue === "Driver" &&
+                                                                        <>
+                                                                            <th className='text-center'>Availability</th>
+                                                                            <th>Rating</th>
+                                                                        </>}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {allUsers.map((user, index) => {
+                                                                    return (
+                                                                        <tr>
+                                                                            <td>{index + 1}.</td>
+                                                                            <td>{user?.userName}</td>
+                                                                            <td>{user?.email}</td>
+                                                                            <td>{user?.phoneNum}</td>
+                                                                            <td>{user?.role}</td>
+                                                                            {user?.role === "Driver" &&
+                                                                                <>
+                                                                                    <td className='text-center'>
+                                                                                        {user?.availability ? <span className="booking-status completed">Available</span> :
+                                                                                            <span className="booking-status pending">Not Available</span>}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div className="current-rating">
+                                                                                            {renderStars(user?.rating)}
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </>}
+
+                                                                        </tr>
+                                                                    )
+                                                                })}
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
 
                                 {(user.role === "Driver") &&
                                 <div className="col-12 login-form-area mt-4">
@@ -568,7 +584,9 @@ const Dashboard = () => {
                                                             })}
                                                             
                                                         </tbody> :
-                                                        <></>
+                                                        <tr>
+                                                        <td colSpan={4} className='text-center text-secondary'>No Data found!</td>
+                                                    </tr>
                                                         }
                                                         
                                                     </table>
@@ -583,164 +601,164 @@ const Dashboard = () => {
 
                     <Footer />
 
-                <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-dialog-centered modal-lg">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title text-orange" id="exampleModalLabel">User Information</h5>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div className="modal-body bg-gray">
-                                {bookingUserDetail?.Customer &&
-                                    <>
-                                        <h6 className='pb-3 text-success'>Customer Information</h6>
-                                        <div className='bg-white pt-4 pb-4 pl-3 pr-3'>
-                                        <div className="row">
-                                            <div className="col-12 col-lg-4 d-flex align-items-center justify-content-center">
-                                                <div className='user-icon'>
-                                                    <i className='fa fa-user'></i>
-                                                </div>
-                                            </div>
-                                            <div className="col-12 col-lg-8">
+                    <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title text-orange" id="exampleModalLabel">User Information</h5>
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body bg-gray">
+                                    {bookingUserDetail?.Customer &&
+                                        <>
+                                            <h6 className='pb-3 text-success'>Customer Information</h6>
+                                            <div className='bg-white pt-4 pb-4 pl-3 pr-3'>
                                                 <div className="row">
-                                                    <div className="col-5">
-                                                        <h6 className=''>UserName</h6>
+                                                    <div className="col-12 col-lg-4 d-flex align-items-center justify-content-center">
+                                                        <div className='user-icon'>
+                                                            <i className='fa fa-user'></i>
+                                                        </div>
                                                     </div>
-                                                    <div className="col-7">
-                                                        <h6 className='text-secondary sub-text'>{bookingUserDetail?.Customer?.userName}</h6>
-                                                    </div>
-                                                </div>
-                                                <hr />
-                                                <div className="row">
-                                                    <div className="col-5">
-                                                        <h6 className=''>E-Mail</h6>
-                                                    </div>
-                                                    <div className="col-7">
-                                                        <h6 className='text-secondary sub-text'>{bookingUserDetail?.Customer?.email}</h6>
-                                                    </div>
-                                                </div>
-                                                <hr />
-                                                <div className="row">
-                                                    <div className="col-5">
-                                                        <h6 className=''>Mobile</h6>
-                                                    </div>
-                                                    <div className="col-7">
-                                                        <h6 className='text-secondary sub-text'>{bookingUserDetail?.Customer?.phoneNum}</h6>
-                                                    </div>
-                                                </div>
-                                                
+                                                    <div className="col-12 col-lg-8">
+                                                        <div className="row">
+                                                            <div className="col-5">
+                                                                <h6 className=''>UserName</h6>
+                                                            </div>
+                                                            <div className="col-7">
+                                                                <h6 className='text-secondary sub-text'>{bookingUserDetail?.Customer?.userName}</h6>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div className="row">
+                                                            <div className="col-5">
+                                                                <h6 className=''>E-Mail</h6>
+                                                            </div>
+                                                            <div className="col-7">
+                                                                <h6 className='text-secondary sub-text'>{bookingUserDetail?.Customer?.email}</h6>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div className="row">
+                                                            <div className="col-5">
+                                                                <h6 className=''>Mobile</h6>
+                                                            </div>
+                                                            <div className="col-7">
+                                                                <h6 className='text-secondary sub-text'>{bookingUserDetail?.Customer?.phoneNum}</h6>
+                                                            </div>
+                                                        </div>
 
-                                            </div>
-                                        </div>
-                                        </div>
-                                        <hr />
-                                    </>
-                                }
-                                {bookingUserDetail?.Driver &&
-                                    <>
-                                        <h6 className='pb-3 text-info'>Driver Information</h6>
-                                        <div className='bg-white pt-4 pb-4 pl-3 pr-3'>
-                                        <div className="row">
-                                        <div className="col-12 col-lg-4 d-flex align-items-center justify-content-center">
-                                            <div className='user-icon'>
-                                                <i className='fa fa-user'></i>
-                                            </div>
-                                        </div>
-                                        <div className="col-12 col-lg-8">
-                                            <div className="row">
-                                                <div className="col-5">
-                                                    <h6 className=''>UserName</h6>
-                                                </div>
-                                                <div className="col-7">
-                                                    <h6 className='text-secondary sub-text'>{bookingUserDetail?.Driver?.userName}</h6>
-                                                </div>
-                                            </div>
-                                            <hr />
-                                            <div className="row">
-                                                <div className="col-5">
-                                                    <h6 className=''>E-Mail</h6>
-                                                </div>
-                                                <div className="col-7">
-                                                    <h6 className='text-secondary sub-text'>{bookingUserDetail?.Driver?.email}</h6>
-                                                </div>
-                                            </div>
-                                            <hr />
-                                            <div className="row">
-                                                <div className="col-5">
-                                                    <h6 className=''>Mobile</h6>
-                                                </div>
-                                                <div className="col-7">
-                                                    <h6 className='text-secondary sub-text'>{bookingUserDetail?.Driver?.phoneNum}</h6>
-                                                </div>
-                                            </div>
-                                            <hr />
-                                            <div className="row">
-                                                        <div className="col-5">
-                                                            <h6 className=''>Availability</h6>
-                                                        </div>
-                                                        <div className="col-7">
-                                                        {(bookingUserDetail?.Driver?.availability) ? <h6 className='text-success sub-text'>Available</h6> :
-                                                        <h6 className='text-warning sub-text'>Not Available</h6>}
-                                                            
-                                                        </div>
-                                            </div>
-                                                    <hr />
-                                                <div className="row">
-                                                    <div className="col-5">
-                                                        <h6 className=''>Current Rating</h6>
-                                                    </div>
-                                                    <div className="col-7">
-                                                        <div className="current-rating">
-                                                        {renderStars(bookingUserDetail?.Driver?.rating)}
-                                                        </div>
-                                                    </div>
-                                                </div>
 
-                                        </div>
-                                        </div>
-                                        </div>
-                                        <hr />
-                                        <div className="row pl-2 pr-2">
-                                            <div className="col-12 col-md-6 my-auto">
-                                                <h6 className='mb-0'>Rating</h6>
-                                            </div>
-                                            <div className="col-12 col-md-6">
-                                                <div className="form-group mt-2">
-                                                    <div class="rating">
-                                                        <input value="5" name="rate" id="star5" type="radio" 
-                                                        onChange={()=>handleRating(bookingUserDetail?.Driver?.id,5)}/>
-                                                        <label title="text" for="star5"></label>
-                                                        <input value="4" name="rate" id="star4" type="radio" 
-                                                        onChange={()=>handleRating(bookingUserDetail?.Driver?.id, 4)}/>
-                                                        <label title="text" for="star4"></label>
-                                                        <input value="3" name="rate" id="star3" type="radio"
-                                                        onChange={()=>handleRating(bookingUserDetail?.Driver?.id, 3)}/>
-                                                        <label title="text" for="star3"></label>
-                                                        <input value="2" name="rate" id="star2" type="radio"
-                                                        onChange={()=>handleRating(bookingUserDetail?.Driver?.id, 2)} />
-                                                        <label title="text" for="star2"></label>
-                                                        <input value="1" name="rate" id="star1" type="radio"
-                                                        onChange={()=>handleRating(bookingUserDetail?.Driver?.id, 1)} />
-                                                        <label title="text" for="star1"></label>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </>
-                                }
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                {/* <button type="button" className="btn btn-primary">Save changes</button> */}
+                                            <hr />
+                                        </>
+                                    }
+                                    {bookingUserDetail?.Driver &&
+                                        <>
+                                            <h6 className='pb-3 text-info'>Driver Information</h6>
+                                            <div className='bg-white pt-4 pb-4 pl-3 pr-3'>
+                                                <div className="row">
+                                                    <div className="col-12 col-lg-4 d-flex align-items-center justify-content-center">
+                                                        <div className='user-icon'>
+                                                            <i className='fa fa-user'></i>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-12 col-lg-8">
+                                                        <div className="row">
+                                                            <div className="col-5">
+                                                                <h6 className=''>UserName</h6>
+                                                            </div>
+                                                            <div className="col-7">
+                                                                <h6 className='text-secondary sub-text'>{bookingUserDetail?.Driver?.userName}</h6>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div className="row">
+                                                            <div className="col-5">
+                                                                <h6 className=''>E-Mail</h6>
+                                                            </div>
+                                                            <div className="col-7">
+                                                                <h6 className='text-secondary sub-text'>{bookingUserDetail?.Driver?.email}</h6>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div className="row">
+                                                            <div className="col-5">
+                                                                <h6 className=''>Mobile</h6>
+                                                            </div>
+                                                            <div className="col-7">
+                                                                <h6 className='text-secondary sub-text'>{bookingUserDetail?.Driver?.phoneNum}</h6>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div className="row">
+                                                            <div className="col-5">
+                                                                <h6 className=''>Availability</h6>
+                                                            </div>
+                                                            <div className="col-7">
+                                                                {(bookingUserDetail?.Driver?.availability) ? <h6 className='text-success sub-text'>Available</h6> :
+                                                                    <h6 className='text-warning sub-text'>Not Available</h6>}
+
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div className="row">
+                                                            <div className="col-5">
+                                                                <h6 className=''>Current Rating</h6>
+                                                            </div>
+                                                            <div className="col-7">
+                                                                <div className="current-rating">
+                                                                    {renderStars(bookingUserDetail?.Driver?.rating)}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div className="row pl-2 pr-2">
+                                                <div className="col-12 col-md-6 my-auto">
+                                                    <h6 className='mb-0'>Rating</h6>
+                                                </div>
+                                                <div className="col-12 col-md-6">
+                                                    <div className="form-group mt-2">
+                                                        <div class="rating">
+                                                            <input value="5" name="rate" id="star5" type="radio"
+                                                                onChange={() => handleRating(bookingUserDetail?.Driver?.id, 5)} />
+                                                            <label title="text" for="star5"></label>
+                                                            <input value="4" name="rate" id="star4" type="radio"
+                                                                onChange={() => handleRating(bookingUserDetail?.Driver?.id, 4)} />
+                                                            <label title="text" for="star4"></label>
+                                                            <input value="3" name="rate" id="star3" type="radio"
+                                                                onChange={() => handleRating(bookingUserDetail?.Driver?.id, 3)} />
+                                                            <label title="text" for="star3"></label>
+                                                            <input value="2" name="rate" id="star2" type="radio"
+                                                                onChange={() => handleRating(bookingUserDetail?.Driver?.id, 2)} />
+                                                            <label title="text" for="star2"></label>
+                                                            <input value="1" name="rate" id="star1" type="radio"
+                                                                onChange={() => handleRating(bookingUserDetail?.Driver?.id, 1)} />
+                                                            <label title="text" for="star1"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                    }
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    {/* <button type="button" className="btn btn-primary">Save changes</button> */}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {/* route charges modal here */}
-                <div class="modal fade" id="routeCharegeModal" tabindex="-1" aria-labelledby="routeCharegeModalLabel" aria-hidden="true">
+                    {/* route charges modal here */}
+                    <div class="modal fade" id="routeCharegeModal" tabindex="-1" aria-labelledby="routeCharegeModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -755,26 +773,26 @@ const Dashboard = () => {
                                             <label for="from_location" class="col-sm-2 col-form-label text-dark font-weight-500">From :</label>
                                             <div class="col-sm-10">
                                                 <input type="text" name='fromLocation' className='form-control' placeholder='Enter Location'
-                                                value={routeDetail.fromLocation} 
-                                                onChange={handleInputChange}/>
+                                                    value={routeDetail.fromLocation}
+                                                    onChange={handleInputChange} />
                                             </div>
                                         </div>
 
                                         <div class="form-group row mb-4">
                                             <label for="to_location" class="col-sm-2 col-form-label text-dark font-weight-500">To :</label>
                                             <div class="col-sm-10">
-                                                <input type="text" name='toLocation' className='form-control' placeholder='Enter Location' 
-                                                value={routeDetail.toLocation} 
-                                                onChange={handleInputChange}/>
+                                                <input type="text" name='toLocation' className='form-control' placeholder='Enter Location'
+                                                    value={routeDetail.toLocation}
+                                                    onChange={handleInputChange} />
                                             </div>
                                         </div>
 
                                         <div class="form-group row mb-0">
                                             <label for="amount" class="col-sm-2 col-form-label text-dark font-weight-500">Amount (LKR) :</label>
                                             <div class="col-sm-10">
-                                                <input type="text" name='amount' className='form-control' placeholder='Enter Amount' 
-                                                value={routeDetail.amount} 
-                                                onChange={handleInputChange}/>
+                                                <input type="text" name='amount' className='form-control' placeholder='Enter Amount'
+                                                    value={routeDetail.amount}
+                                                    onChange={handleInputChange} />
                                             </div>
                                         </div>
                                     </form>
@@ -782,15 +800,27 @@ const Dashboard = () => {
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-success"
-                                    onClick={handleRouteCreate}>Create</button>
+                                        onClick={handleRouteCreate}>Create</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {/*  */}
-            </> : <p>loading</p>
-            )}
-        
+                </> :
+                    <div className="dot-spinner-area">
+                        <div className="dot-spinner">
+                            <div className="dot-spinner__dot"></div>
+                            <div className="dot-spinner__dot"></div>
+                            <div className="dot-spinner__dot"></div>
+                            <div className="dot-spinner__dot"></div>
+                            <div className="dot-spinner__dot"></div>
+                            <div className="dot-spinner__dot"></div>
+                            <div className="dot-spinner__dot"></div>
+                            <div className="dot-spinner__dot"></div>
+                        </div>
+                    </div>
+                )}
+
         </>
 
     )
