@@ -546,51 +546,58 @@ const Dashboard = () => {
                                     </div>
                                 }
 
-                                {(user.role === "Driver" && allRoutes?.length > 0) &&
-                                    <div className="col-12 login-form-area mt-4">
-                                        <div className="">
-                                            <div className="d-flex align-items-center justify-content-between mb-3">
-                                                <h4 className='text-center mb-0'>ROUTE CHARGES</h4>
-                                                <button className='btn btn-sm btn-success' data-toggle="modal" data-target="#routeCharegeModal">
-                                                    <i className='fa fa-plus mr-2'></i>
-                                                    Create New
-                                                </button>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-12">
+                                {(user.role === "Driver") &&
+                                <div className="col-12 login-form-area mt-4">
+                                    <div className="">
+                                        <div className="d-flex align-items-center justify-content-between mb-3">
+                                            <h4 className='text-center mb-0'>ROUTE CHARGES</h4>
+                                            <button className='btn btn-sm btn-success' data-toggle="modal" data-target="#routeCharegeModal">
+                                                <i className='fa fa-plus mr-2'></i>
+                                                Create New
+                                            </button>
+                                        </div>
+                                        
+                                        <div className="row">
+                                            <div className="col-12">
 
-                                                    <div className="table-responsive">
-                                                        <table className="table table-borderd bg-white">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>No.</th>
-                                                                    <th>From</th>
-                                                                    <th>To</th>
-                                                                    <th>Amount</th>
-                                                                </tr>
-                                                            </thead>
+                                                <div className="table-responsive">
+                                                    <table className="table table-borderd bg-white">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No.</th>
+                                                                <th>From</th>
+                                                                <th>To</th>
+                                                                <th>Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        {allRoutes.length>0 ?
                                                             <tbody>
-                                                                {allRoutes.map((routesCharge, index) => {
-                                                                    return (
-                                                                        <tr>
-                                                                            <td>{index + 1}.</td>
-                                                                            <td>{routesCharge?.from}</td>
-                                                                            <td>{routesCharge?.to}</td>
-                                                                            <td>{routesCharge?.money}</td>
-                                                                        </tr>
-                                                                    )
-                                                                })}
-
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
+                                                            {allRoutes.map((routesCharge, index)=>{
+                                                                return(
+                                                                    <tr>
+                                                                        <td>{index+1}.</td>
+                                                                        <td>{routesCharge?.from}</td>
+                                                                        <td>{routesCharge?.to}</td>
+                                                                        <td>{routesCharge?.money}</td>
+                                                                    </tr>
+                                                                )
+                                                            })}
+                                                            
+                                                        </tbody> :
+                                                        <tr>
+                                                        <td colSpan={4} className='text-center text-secondary'>No Data found!</td>
+                                                    </tr>
+                                                        }
+                                                        
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>}
-                            </div>
+                                    </div>
+                                </div>}
                         </div>
-                    </section>
+                    </div>
+                </section>
 
                     <Footer />
 
