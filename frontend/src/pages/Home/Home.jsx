@@ -159,7 +159,7 @@ const Home = () => {
     }, [])
 
     const handleRouteDetail = () => {
-
+        setRouteDetail([])
         axios.get(`https://lanka-cabs.onrender.com/route-detail/${selectedLocation}/${selectedToLocation}`)
             .then(res => {
                 console.log(res.data);
