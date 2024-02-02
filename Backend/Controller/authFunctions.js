@@ -14,14 +14,134 @@ const bookingDetail = require("../dataBase/bookingDetail");
 
 
 /* create User */
-const createCustomer = async (req, res) => {
+// const createCustomer = async (req, res) => {
     
+//     try {
+//         const { email, role, phoneNum } = req.body;
+//         const userExiest = await registerUser.findOne({ $or: [{ email },  {phoneNum}] })
+//         if(userExiest){
+//             return res.status(400).json({error:"User Already exiest with this email"});
+//         }
+//         // Generate a random username
+//         const generateRandomUsername = () => {
+//             const charsetForUsername = '1234567890';
+//             let userNameNum = '';
+//             for (let i = 0; i < 3; i++) {
+//                 const randomIndex = Math.floor(Math.random() * charsetForUsername.length);
+//                 userNameNum += charsetForUsername[randomIndex];
+//             }
+//             const userNameFront = email.split('@')[0];
+//             return userNameFront + userNameNum;
+//         };
+
+//         // Generate a random password
+//         const generateRandomPassword = () => {
+//             const charsetForPassword = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//             let password = '';
+//             for (let i = 0; i < 10; i++) { // Increase password length to 10 characters
+//                 const randomIndex = Math.floor(Math.random() * charsetForPassword.length);
+//                 password += charsetForPassword[randomIndex];
+//             }
+//             return password;
+//         };
+
+//         const userName = generateRandomUsername();
+//         const password = generateRandomPassword();
+
+//         const customerId = uuidv4();
+
+//         const newUser = new registerUser({ // Assuming Customer is the mongoose model
+//             id: customerId,
+//             userName,
+//             email,
+//             password,
+//             phoneNum,
+//             role,
+//          });
+    
+//         await newCustomer.save();
+
+//         if(role === "Driver"){
+//             const newDriverForHisSchema = new driver({ 
+//                 id: customerId,
+//                 userName,
+//                 email,
+//                 phoneNum,
+//                 role,
+//                 availability:false,
+//                 rating:0
+//              });
+        
+//             await newDriverForHisSchema.save();
+//         }else if(role === "Customer"){
+//             const newCustomerForHisSchema = new customer({ 
+//                 id: customerId,
+//                 userName,
+//                 email,
+//                 phoneNum,
+//                 role,
+//              });
+
+//              await newCustomerForHisSchema.save();
+//         }else if(role === "Operator"){
+//             const newOperatorForHisSchema = new operator({ 
+//                 id: customerId,
+//                 userName,
+//                 email,
+//                 phoneNum,
+//                 role,
+//              });
+
+//              await newOperatorForHisSchema.save();
+//         }
+       
+//         // Send email to the customer with their username and password
+//         const transporter = nodemailer.createTransport({
+//             service: 'gmail',
+//             auth: {
+//                 user: 'demoemail1322@gmail.com',
+//                 pass: 'znsdgrmwzskpatwz'
+//             }
+//         });
+
+//         const mailOptions = {
+//             from: 'demoemail1322@gmail.com',
+//             to: email,
+//             subject: 'Welcome to Our Service',
+//             html: `
+//             <p>Hello,</p>
+//             <p>Welcome to our service! Below are your login details:</p>
+//             <p>Username: ${userName}</p>
+//             <p>Password: ${password}</p>
+//             <p>Please keep this information secure.</p>
+//             <p>Thank You!</p>
+//             `
+//         };
+
+//         transporter.sendMail(mailOptions, function (error, info) {
+//             if (error) {
+//                 console.error('Email sending error:', error);
+//                 return res.status(500).json({ error: 'Failed to send email', newUser:newCustomer });
+//             } else {
+//                 console.log('Email sent:', info.response);
+//                 res.status(201).json({ newUser:newCustomer, emailSent: true });
+//             }
+//         });
+//     } catch (err) {
+//         console.error('Error creating customer:', err);
+//         return res.status(500).json({ error: 'Failed to create customer', err });
+//     }
+// };
+
+const createCustomer = async (req, res) => {
     try {
         const { email, role, phoneNum } = req.body;
-        const userExiest = await registerUser.findOne({ $or: [{ email },  {phoneNum}] })
-        if(userExiest){
-            return res.status(400).json({error:"User Already exiest with this email"});
+        const userExists = await registerUser.findOne({ $or: [{ email }, { phoneNum }] });
+        
+        if (userExists) {
+            throw new Error("User already exists with this email or phone number");
         }
+
         // Generate a random username
         const generateRandomUsername = () => {
             const charsetForUsername = '1234567890';
@@ -31,8 +151,10 @@ const createCustomer = async (req, res) => {
                 userNameNum += charsetForUsername[randomIndex];
             }
             const userNameFront = email.split('@')[0];
-            return userNameFront + userNameNum;
+            const uniqueIdentifier = Date.now().toString(36); // Unique timestamp-based identifier
+            return userNameFront + userNameNum + uniqueIdentifier;
         };
+        
 
         // Generate a random password
         const generateRandomPassword = () => {
@@ -45,56 +167,57 @@ const createCustomer = async (req, res) => {
             return password;
         };
 
+        // Generate username, password, and customerId
         const userName = generateRandomUsername();
         const password = generateRandomPassword();
-
         const customerId = uuidv4();
 
-        const newCustomer = new registerUser({ // Assuming Customer is the mongoose model
+        // Create new user document
+        const newUser = new registerUser({
             id: customerId,
             userName,
             email,
             password,
             phoneNum,
             role,
-         });
-    
-        await newCustomer.save();
+        });
 
-        if(role === "Driver"){
-            const newDriverForHisSchema = new driver({ 
+        await newUser.save();
+
+        // Handle role-specific schema creation
+        let newSchema;
+        if (role === "Driver") {
+            newSchema = new driver({
                 id: customerId,
                 userName,
                 email,
                 phoneNum,
                 role,
-                availability:false,
-                rating:0
-             });
-        
-            await newDriverForHisSchema.save();
-        }else if(role === "Customer"){
-            const newCustomerForHisSchema = new customer({ 
+                availability: false,
+                rating: 0
+            });
+        } else if (role === "Customer") {
+            newSchema = new customer({
                 id: customerId,
                 userName,
                 email,
                 phoneNum,
                 role,
-             });
-
-             await newCustomerForHisSchema.save();
-        }else if(role === "Operator"){
-            const newOperatorForHisSchema = new operator({ 
+            });
+        } else if (role === "Operator") {
+            newSchema = new operator({
                 id: customerId,
                 userName,
                 email,
                 phoneNum,
                 role,
-             });
-
-             await newOperatorForHisSchema.save();
+            });
         }
-       
+
+        if (newSchema) {
+            await newSchema.save();
+        }
+
         // Send email to the customer with their username and password
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -121,17 +244,18 @@ const createCustomer = async (req, res) => {
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.error('Email sending error:', error);
-                return res.status(500).json({ error: 'Failed to send email', newUser:newCustomer });
+                throw new Error('Failed to send email');
             } else {
                 console.log('Email sent:', info.response);
-                res.status(201).json({ newUser:newCustomer, emailSent: true });
+                res.status(201).json({ newUser: newUser, emailSent: true });
             }
         });
     } catch (err) {
         console.error('Error creating customer:', err);
-        return res.status(500).json({ error: 'Failed to create customer', err });
+        return res.status(500).json({ error: err.message });
     }
 };
+
 
 /* user login */
 const userLogin = async (req, role, res) => {

@@ -47,7 +47,7 @@ const Register = () => {
             .then(res=>{
                 console.log(res.data);
                 showSuccessMessage("Find your Login Credentials in your email")
-                setCredentials(intialCredentials);
+                setCredentials({...credentials, email:"", phoneNum:""});
             })
             .catch(err=>{
                 console.log(err)
